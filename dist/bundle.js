@@ -27069,7 +27069,8 @@
 	      upvote: 204,
 	      downvote: 35,
 	      share: 147,
-	      'demand-new-head': 40
+	      'demand-new-head': 40,
+	      didAction: false
 	    };
 	    _this.onReaction = _this.onReaction.bind(_this);
 	    return _this;
@@ -27078,8 +27079,10 @@
 	  _createClass(Issue, [{
 	    key: 'onReaction',
 	    value: function onReaction(event) {
+	      var _setState;
+
 	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
-	      this.setState(_defineProperty({}, reactionId, this.state[reactionId] + 1));
+	      this.setState((_setState = {}, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
 	    }
 	  }, {
 	    key: 'render',
@@ -27183,8 +27186,8 @@
 	          ),
 	          _react2.default.createElement(
 	            'button',
-	            { className: 'btn btn-primary involve-btn mt-2' },
-	            ' Get me involved! '
+	            { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
+	            'Get me involved!'
 	          )
 	        )
 	      );

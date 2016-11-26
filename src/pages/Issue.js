@@ -9,14 +9,18 @@ export default class Issue extends React.Component {
       upvote: 204,
       downvote: 35,
       share: 147,
-      'demand-new-head': 40
+      'demand-new-head': 40,
+      didAction: false
     };
     this.onReaction = this.onReaction.bind(this);
   }
 
   onReaction(event) {
     const reactionId = $(event.currentTarget).attr('data-reaction');
-    this.setState({ [reactionId]: this.state[reactionId] + 1});
+    this.setState({
+      [reactionId]: this.state[reactionId] + 1,
+      didAction: true
+    });
   }
   render() {
     return (
@@ -61,7 +65,9 @@ export default class Issue extends React.Component {
             <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
           </form>
 
-          <button className='btn btn-primary involve-btn mt-2'> Get me involved! </button>
+          <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
+            Get me involved!
+          </button>
 
         </issue>
       </div>
