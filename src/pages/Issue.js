@@ -3,24 +3,49 @@ import $ from 'jquery';
 import { Link } from 'react-router';
 import _ from 'lodash';
 
+
+const ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
 }
 
 const getIssueStats = (issueId, cb) => {
-  setTimeout(() => {
-    cb({
-      follow: getRandom(),
-      upvote: getRandom(),
-      downvote: getRandom(),
-      share: getRandom(),
-      'demand-new-head': getRandom()
-    })
-  }, 50)
+    $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (issue) => {
+
+    }).fail( (responseText) => {
+      try {
+      let result = JSON.parse(responseText.responseText);
+      }catch(e) {
+        console.error(`Error occurde`, e)
+        cb({
+        follow: 0
+      });
+        return;
+      }
+      if(!result.ok) {
+        alert(`Error occured, plz try again. Error msg: ${JSON.stringify(result)}`);
+        return;
+      }
+      let issue = result.results[0];
+      console.log (JSON.stringify(issue))
+      cb({
+        follow: issue.follow || 0,
+        upvote: getRandom(),
+        downvote: getRandom(),
+        share: getRandom(),
+        'demand-new-head': getRandom()
+      })
+    });
 }
 
-const increaseIssueStat = (statsKey) => {
-
+const increaseIssueStat = (issueId, issue, statsKey, cb) => {
+    $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
+      "newobj=" + escape('{"follow":1}&amp;') +"&amp;"+
+      "upsert=true").done( (response) => {
+      cb(response);
+    }).fail( (error) => {
+      alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
+    });
 }
 
 export default class Issue extends React.Component {
@@ -74,6 +99,10 @@ export default class Issue extends React.Component {
     this.setState({
       [reactionId]: this.state[reactionId] + 1,
       didAction: true
+    });
+
+    increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, (response) => {
+      console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
     });
   }
   render() {

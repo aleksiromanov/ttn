@@ -27062,6 +27062,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
 	var getRandom = function getRandom() {
 	  var limit = arguments.length <= 0 || arguments[0] === undefined ? 50 : arguments[0];
 
@@ -27069,18 +27070,39 @@
 	};
 
 	var getIssueStats = function getIssueStats(issueId, cb) {
-	  setTimeout(function () {
+	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (issue) {}).fail(function (responseText) {
+	    try {
+	      var _result = JSON.parse(responseText.responseText);
+	    } catch (e) {
+	      console.error('Error occurde', e);
+	      cb({
+	        follow: 0
+	      });
+	      return;
+	    }
+	    if (!result.ok) {
+	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(result));
+	      return;
+	    }
+	    var issue = result.results[0];
+	    console.log(JSON.stringify(issue));
 	    cb({
-	      follow: getRandom(),
+	      follow: issue.follow || 0,
 	      upvote: getRandom(),
 	      downvote: getRandom(),
 	      share: getRandom(),
 	      'demand-new-head': getRandom()
 	    });
-	  }, 50);
+	  });
 	};
 
-	var increaseIssueStat = function increaseIssueStat(statsKey) {};
+	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, cb) {
+	  _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow":1}&amp;') + "&amp;" + "upsert=true").done(function (response) {
+	    cb(response);
+	  }).fail(function (error) {
+	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
+	  });
+	};
 
 	var Issue = function (_React$Component) {
 	  _inherits(Issue, _React$Component);
@@ -27140,10 +27162,15 @@
 	  }, {
 	    key: 'onReaction',
 	    value: function onReaction(event) {
-	      var _setState;
+	      var _setState,
+	          _this3 = this;
 
 	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
 	      this.setState((_setState = {}, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
+
+	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, function (response) {
+	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
+	      });
 	    }
 	  }, {
 	    key: 'render',
