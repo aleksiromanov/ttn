@@ -8,8 +8,19 @@ const ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
 }
-
+const NO_DB = true;
 const getIssueStats = (issueId, cb) => {
+  if(NO_DB) {
+    cb({
+      follow: 330,
+      upvote: 204,
+      downvote: 35,
+      share: 147,
+      'demand-new-head': 40,
+    })
+    return;
+  }
+
     $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (issue) => {
 
     }).fail( (responseText) => {
@@ -138,7 +149,7 @@ export default class Issue extends React.Component {
               type="button"
               data-reaction='share'
               onClick={this.onReaction}
-              href= {'http://www.facebook.com/sharer.php?s=100&p[title]='+encodeURIComponent(issue.subject) + '&p[summary]=' + encodeURIComponent(issue.summary + '\n View this and other 4 hot topics') + '&p[url]=' + 'www.linkedin.com'}
+              href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
               target="_blank">
               Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
             </a>
