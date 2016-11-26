@@ -66,7 +66,10 @@ export default class Issue extends React.Component {
           </form>
 
           <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
-            Get me involved!
+            Petitiong
+          </button>
+          <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
+            Make meeting on FB
           </button>
 
         </issue>
