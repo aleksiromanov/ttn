@@ -4,22 +4,6 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const STYLES = {
-  customWidth: {
-    width: 150,
-    margin: 20,
-  },
-  selectField: {
-    borderStyle: 'solid',
-    borderWidth: 1,
-  },
-  textField: {
-    width: 50,
-    borderStyle: 'solid',
-    borderWidth: 1,
-  },
-};
-
 export default class App extends React.Component {
 
   constructor() {
@@ -49,7 +33,7 @@ export default class App extends React.Component {
   renderFrontpage = () => (
     <div>
       <div style={{ margin: 12 }}>
-        <label> Have an account? </label>
+        <label> Really Want an account? </label>
         <RaisedButton
           label={'Sign in'}
           disableTouchRipple
