@@ -7,13 +7,13 @@ import ReactDOM from 'react-dom';
 import App from './pages/App.js'
 import Issue from './pages/Issue.js'
 
-import {Router, IndexRoute, Route, useRouterHistory, browserHistory} from 'react-router';
+import {Router, Redirect, IndexRoute, Route, useRouterHistory, browserHistory} from 'react-router';
 import { createHashHistory } from 'history'
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
 ReactDOM.render(
   <Router history={appHistory}>
     <Route path="/issue/:issueId" component={Issue}/>
-    <Route path="*" component={App}/>
+    <Redirect from="*" to="/issue/1"/>
   </Router>,
   document.getElementById('app')
 );

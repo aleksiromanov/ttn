@@ -84,7 +84,7 @@
 	  _reactRouter.Router,
 	  { history: appHistory },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/issue/:issueId', component: _Issue2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '*', component: _App2.default })
+	  _react2.default.createElement(_reactRouter.Redirect, { from: '*', to: '/issue/1' })
 	), document.getElementById('app'));
 
 /***/ },
