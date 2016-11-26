@@ -1,14 +1,23 @@
 import React from 'react';
+import $ from 'jquery';
 
 export default class Issue extends React.Component {
   constructor() {
     super();
     this.state = {
-      // route components are rendered with useful information, like URL params
-      // user: findUserById(this.props.params.userId)
+      follow: 330,
+      upvote: 204,
+      downvote: 35,
+      share: 147,
+      'demand-new-head': 40
     };
+    this.onReaction = this.onReaction.bind(this);
   }
 
+  onReaction(event) {
+    const reactionId = $(event.currentTarget).attr('data-reaction');
+    this.setState({ [reactionId]: this.state[reactionId] + 1});
+  }
   render() {
     return (
       <div className='container'>
@@ -24,31 +33,35 @@ export default class Issue extends React.Component {
               The City decided to put the issue on the table for two weeks.
               <br/>
               Disabled groups: Pilvi Torsti
+              <br/>
+              <a href='#'> Read more </a>
+
             </p>
-            <a href='#'> Read more </a>
           </article>
 
           <div>
-            <button className="btn btn-outline-primary" type="button">
-              Follow <span className="tag tag-pill tag-primary">1</span>
+            <button className="btn btn-outline-primary" type="button" data-reaction='follow' onClick={this.onReaction}>
+              Follow <span className="tag tag-pill tag-primary">{this.state.follow}</span>
             </button>
-            <button className="btn btn-outline-primary" type="button">
-              Upvote <span className="tag tag-pill tag-primary">1</span>
+            <button className="btn btn-outline-primary" type="button" data-reaction='upvote' onClick={this.onReaction}>
+              Upvote <span className="tag tag-pill tag-primary">{this.state.upvote}</span>
             </button>
-            <button className="btn btn-outline-primary" type="button">
-              Downvote <span className="tag tag-pill tag-primary">1</span>
+            <button className="btn btn-outline-primary" type="button" data-reaction='downvote' onClick={this.onReaction}>
+              Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
             </button>
-            <button className="btn btn-outline-primary" type="button">
-              Share <span className="tag tag-pill tag-primary">1</span>
+            <button className="btn btn-outline-primary" type="button" data-reaction='share' onClick={this.onReaction}>
+              Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
             </button>
           </div>
 
-          <div>
-            <button className="btn btn-outline-primary" type="button">
-              Demand New Head <span className="tag tag-pill tag-primary">1</span>
+          <form className="form-inline">
+            <button className="btn btn-outline-primary" type="button" data-reaction='demand-new-head' onClick={this.onReaction}>
+              Demand New Head <span className="tag tag-pill tag-primary">{this.state['demand-new-head']}</span>
             </button>
             <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
-          </div>
+          </form>
+
+          <button className='btn btn-primary involve-btn mt-2'> Get me involved! </button>
 
         </issue>
       </div>
