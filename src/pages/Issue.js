@@ -104,6 +104,8 @@ export default class Issue extends React.Component {
     increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, (response) => {
       console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
     });
+
+
   }
   render() {
     let issue = this.state.issue || {};
@@ -132,9 +134,14 @@ export default class Issue extends React.Component {
             <button className="btn btn-outline-primary" type="button" data-reaction='downvote' onClick={this.onReaction}>
               Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
             </button>
-            <button className="btn btn-outline-primary" type="button" data-reaction='share' onClick={this.onReaction}>
+            <a className="btn btn-outline-primary"
+              type="button"
+              data-reaction='share'
+              onClick={this.onReaction}
+              href= {'http://www.facebook.com/sharer.php?s=100&p[title]='+encodeURIComponent(issue.subject) + '&p[summary]=' + encodeURIComponent(issue.summary + '\n View this and other 4 hot topics') + '&p[url]=' + 'www.linkedin.com'}
+              target="_blank">
               Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
-            </button>
+            </a>
           </div>
 
           <form className="form-inline">
