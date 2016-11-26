@@ -10,7 +10,6 @@ COPY dist/bundle.js /opt/ttn/
 COPY dist/index.html /opt/ttn/
 COPY dist/roboto.css /opt/ttn/
 COPY dist/style.css /opt/ttn/
-COPY dist/images/ /opt/ttn/images/
 ENV TERM=linux
 ENV PS1="\n\u@\h \j \w # "
 CMD ["/usr/sbin/nginx"]
