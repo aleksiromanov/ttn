@@ -8,8 +8,19 @@ const ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
 }
-
+const NO_DB = true;
 const getIssueStats = (issueId, cb) => {
+  if(NO_DB) {
+    cb({
+      follow: 330,
+      upvote: 204,
+      downvote: 35,
+      share: 147,
+      'demand-new-head': 40,
+    })
+    return;
+  }
+
     $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (issue) => {
 
     }).fail( (responseText) => {

@@ -27072,8 +27072,19 @@
 
 	  return Math.ceil(Math.random() * 1000 % limit);
 	};
-
+	var NO_DB = true;
 	var getIssueStats = function getIssueStats(issueId, cb) {
+	  if (NO_DB) {
+	    cb({
+	      follow: 330,
+	      upvote: 204,
+	      downvote: 35,
+	      share: 147,
+	      'demand-new-head': 40
+	    });
+	    return;
+	  }
+
 	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (issue) {}).fail(function (responseText) {
 	    try {
 	      var _result = JSON.parse(responseText.responseText);
