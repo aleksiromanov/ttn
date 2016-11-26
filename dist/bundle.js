@@ -21551,16 +21551,100 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'container' },
 	        _react2.default.createElement(
-	          'h2',
+	          'issue',
 	          null,
-	          'Issue #1'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Issue description '
+	          _react2.default.createElement(
+	            'article',
+	            null,
+	            _react2.default.createElement(
+	              'h2',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                null,
+	                ' << '
+	              ),
+	              'Approval of the Agreement on the implementation of the Guggenheim Helsinki Museum'
+	            ),
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              ' Decision '
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              'The City decided to put the issue on the table for two weeks.',
+	              _react2.default.createElement('br', null),
+	              'Disabled groups: Pilvi Torsti'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { href: '#' },
+	              ' Read more '
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-outline-primary', type: 'button' },
+	              'Follow ',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'tag tag-pill tag-primary' },
+	                '1'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-outline-primary', type: 'button' },
+	              'Upvote ',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'tag tag-pill tag-primary' },
+	                '1'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-outline-primary', type: 'button' },
+	              'Downvote ',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'tag tag-pill tag-primary' },
+	                '1'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-outline-primary', type: 'button' },
+	              'Share ',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'tag tag-pill tag-primary' },
+	                '1'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-outline-primary', type: 'button' },
+	              'Demand New Head ',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'tag tag-pill tag-primary' },
+	                '1'
+	              )
+	            ),
+	            _react2.default.createElement('input', { type: 'text', className: 'form-control reaction-input', placeholder: 'Add new reaction' })
+	          )
 	        )
 	      );
 	    }
