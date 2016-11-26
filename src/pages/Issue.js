@@ -138,7 +138,7 @@ export default class Issue extends React.Component {
               type="button"
               data-reaction='share'
               onClick={this.onReaction}
-              href= {'http://www.facebook.com/sharer.php?s=100&p[title]='+encodeURIComponent(issue.subject) + '&p[summary]=' + encodeURIComponent(issue.summary + '\n View this and other 4 hot topics') + '&p[url]=' + 'www.linkedin.com'}
+              href= {'http://www.facebook.com/sharer.php?p[url]=' + window.location}
               target="_blank">
               Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
             </a>
