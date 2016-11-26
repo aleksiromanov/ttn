@@ -1,20 +1,72 @@
 import React from 'react';
 import $ from 'jquery';
 import { Link } from 'react-router';
+import _ from 'lodash';
 
+const getRandom = (limit=50) => {
+  return Math.ceil((Math.random()*1000) % limit);
+}
+
+const getIssueStats = (issueId, cb) => {
+  setTimeout(() => {
+    cb({
+      follow: getRandom(),
+      upvote: getRandom(),
+      downvote: getRandom(),
+      share: getRandom(),
+      'demand-new-head': getRandom()
+    })
+  }, 50)
+}
+
+const increaseIssueStat = (statsKey) => {
+
+}
 
 export default class Issue extends React.Component {
   constructor() {
     super();
+    this.onReaction = this.onReaction.bind(this);
+    this.loadIssue = this.loadIssue.bind(this);
+
     this.state = {
       follow: 330,
       upvote: 204,
       downvote: 35,
       share: 147,
       'demand-new-head': 40,
-      didAction: false
+      didAction: false,
+      issue: null,
+      loaded: false
     };
-    this.onReaction = this.onReaction.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadIssue(this.props.params.issueId);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.loadIssue(newProps.params.issueId)
+  }
+
+  loadIssue(issueId) {
+    this.setState({
+        loaded: false
+    })
+    getIssueStats(issueId, (issue) => {
+      this.setState(_.extend({
+        loaded: true
+      },issue));
+    })
+    $.get(`http://dev.hel.fi/openahjo/v1/issue/${issueId}/?format=json`).
+    done((data) => {
+      this.setState({
+        issue: data
+      })
+    })
+    .fail( (error) => {
+      alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
+    })
   }
 
   onReaction(event) {
@@ -25,23 +77,19 @@ export default class Issue extends React.Component {
     });
   }
   render() {
-    return (
-      <div className='container'>
-        <issue>
+    let issue = this.state.issue || {};
+    let issueElem = 'Loading...';
+    if(this.state.loaded) {
+      issueElem =
+      <issue>
           <article>
             <h2>
               <a> &lt;&lt; </a>
-              Approval of the Agreement on the implementation of the Guggenheim Helsinki Museum
+              {issue.subject}
             </h2>
-            <h3> Decision </h3>
-
             <p>
-              The City decided to put the issue on the table for two weeks.
-              <br/>
-              Disabled groups: Pilvi Torsti
-              <br/>
+              {issue.summary}
               <a href='#'> Read more </a>
-
             </p>
           </article>
 
@@ -75,10 +123,14 @@ export default class Issue extends React.Component {
           </button>
 
           <div>
-            <Link to={`/issue/${Math.ceil(Math.random()*100)}`}> Next Issue </Link>
+            <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default'>Next Issue  >> </button></Link>
           </div>
 
-        </issue>
+      </issue>
+    }
+    return (
+      <div className='container'>
+        {issueElem}
       </div>
     )
   }
