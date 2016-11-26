@@ -27239,8 +27239,13 @@
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'share', onClick: this.onReaction },
+	              'a',
+	              { className: 'btn btn-outline-primary',
+	                type: 'button',
+	                'data-reaction': 'share',
+	                onClick: this.onReaction,
+	                href: 'http://www.facebook.com/sharer.php?s=100&p[title]=' + encodeURIComponent(issue.subject) + '&p[summary]=' + encodeURIComponent(issue.summary + '\n View this and other 4 hot topics') + '&p[url]=' + 'www.linkedin.com',
+	                target: '_blank' },
 	              'Share ',
 	              _react2.default.createElement(
 	                'span',
