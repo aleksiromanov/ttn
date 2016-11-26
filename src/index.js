@@ -2,26 +2,18 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-import { Router, useRouterHistory } from 'react-router';
-import { createHashHistory } from 'history';
-import routes from './routes';
-import Styles from './pages/Styles';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+// import injectTapEventPlugin from 'react-tap-event-plugin';
+// injectTapEventPlugin();
+import App from './pages/App.js'
+import Issue from './pages/Issue.js'
+
+import {Router, IndexRoute, Route, useRouterHistory, browserHistory} from 'react-router';
 
 ReactDOM.render(
-  <MuiThemeProvider muiTheme={getMuiTheme({ palette: Styles.palette, appBar: Styles.appBar })} >
-    <div>
-      <Router
-        history={useRouterHistory(createHashHistory)({ queryKey: false })}
-        onUpdate={() => window.scrollTo(0, 0)}
-      >
-        {routes}
-      </Router>
-    </div>
-  </MuiThemeProvider>,
+  <Router>
+    <Route path="/issue/:issueId" component={Issue}/>
+    <Route path="*" component={App}/>
+  </Router>,
   document.getElementById('app')
 );
 

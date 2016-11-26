@@ -55,6 +55,7 @@
     "find-up": "^1.1.2",
     "hashish": "0.0.4",
     "history": "~2.1.1",
+    "jquery": "^3.1.1",
     "lodash._baseeach": "^4.1.2",
     "lodash._basefind": "^3.0.0",
     "lodash._basefindindex": "^3.6.0",
