@@ -138,7 +138,7 @@ export default class Issue extends React.Component {
               type="button"
               data-reaction='share'
               onClick={this.onReaction}
-              href= {'http://www.facebook.com/sharer.php?p[url]=' + window.location}
+              href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
               target="_blank">
               Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
             </a>

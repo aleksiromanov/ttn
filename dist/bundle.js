@@ -27244,7 +27244,7 @@
 	                type: 'button',
 	                'data-reaction': 'share',
 	                onClick: this.onReaction,
-	                href: 'http://www.facebook.com/sharer.php?p[url]=' + window.location,
+	                href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
 	                target: '_blank' },
 	              'Share ',
 	              _react2.default.createElement(
