@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const STYLES = {
   customWidth: {
