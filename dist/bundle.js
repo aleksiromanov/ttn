@@ -27046,6 +27046,8 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
+	var _reactRouter = __webpack_require__(174);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -27193,6 +27195,15 @@
 	            'button',
 	            { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
 	            'Make meeting on FB'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/issue/' + Math.ceil(Math.random() * 100) },
+	              ' Next Issue '
+	            )
 	          )
 	        )
 	      );

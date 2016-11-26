@@ -1,5 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
+import { Link } from 'react-router';
+
 
 export default class Issue extends React.Component {
   constructor() {
@@ -71,6 +73,10 @@ export default class Issue extends React.Component {
           <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
             Make meeting on FB
           </button>
+
+          <div>
+            <Link to={`/issue/${Math.ceil(Math.random()*100)}`}> Next Issue </Link>
+          </div>
 
         </issue>
       </div>
