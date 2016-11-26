@@ -1,0 +1,18 @@
+# vim: sw=2:
+# Install-front-container
+---
+- hosts: all
+
+  tasks:
+
+    - command: echo skipping npm install
+      args:
+        chdir: "{{homedir}}"
+
+    - command: webpack -p
+      args:
+        chdir: "{{homedir}}"
+      environment:
+        NODE_ENV: production
+
+
