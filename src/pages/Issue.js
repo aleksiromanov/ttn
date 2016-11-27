@@ -16,7 +16,7 @@ const getIssueStats = (issueId, cb) => {
       upvote: 204,
       downvote: 35,
       share: 147,
-      'demand-new-head': 40,
+      'demand-more-info': 40,
     })
     return;
   }
@@ -44,7 +44,7 @@ const getIssueStats = (issueId, cb) => {
         upvote: getRandom(),
         downvote: getRandom(),
         share: getRandom(),
-        'demand-new-head': getRandom()
+        'demand-more-info': getRandom()
       })
     });
 }
@@ -72,7 +72,9 @@ export default class Issue extends React.Component {
       upvote: 204,
       downvote: 35,
       share: 147,
-      'demand-new-head': 40,
+      'demand-more-info': 40,
+      'too-small-budget': 23,
+      'too-expensive': 123,
       didAction: false,
       issue: null,
       loaded: false
@@ -164,8 +166,14 @@ export default class Issue extends React.Component {
             </div>
 
             <form className="form-inline">
-              <button className="btn btn-outline-primary" type="button" data-reaction='demand-new-head' onClick={this.onReaction}>
-                Demand New Head <span className="tag tag-pill tag-primary">{this.state['demand-new-head']}</span>
+              <button className="btn btn-outline-primary" type="button" data-reaction='demand-more-info' onClick={this.onReaction}>
+                Demand More Information <span className="tag tag-pill tag-primary">{this.state['demand-more-info']}</span>
+              </button>
+              <button className="btn btn-outline-primary" type="button" data-reaction='too-expensive' onClick={this.onReaction}>
+                Too expensive! <span className="tag tag-pill tag-primary">{this.state['too-expensive']}</span>
+              </button>
+              <button className="btn btn-outline-primary" type="button" data-reaction='too-small-budget' onClick={this.onReaction}>
+                Too small budget! <span className="tag tag-pill tag-primary">{this.state['too-small-budget']}</span>
               </button>
               <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
             </form>
