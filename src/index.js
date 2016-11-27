@@ -10,7 +10,7 @@ const appHistory = useRouterHistory(createHashHistory)({ queryKey: false })
 ReactDOM.render(
   <Router history={appHistory}>
     <Route path="/issue/:issueId" component={Issue}/>
-    <Redirect from="*" to="/issue/1"/>
+    <Redirect from="*" to="/issue/31660"/>
   </Router>,
   document.getElementById('app')
 );

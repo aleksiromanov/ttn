@@ -77,7 +77,7 @@
 	  _reactRouter.Router,
 	  { history: appHistory },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/issue/:issueId', component: _Issue2.default }),
-	  _react2.default.createElement(_reactRouter.Redirect, { from: '*', to: '/issue/1' })
+	  _react2.default.createElement(_reactRouter.Redirect, { from: '*', to: '/issue/31660' })
 	), document.getElementById('app'));
 
 /***/ },
@@ -26573,6 +26573,8 @@
 	    value: function render() {
 	      var issue = this.state.issue || {};
 	      var issueElem = 'Loading...';
+	      var issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
+	      console.log(getRandom(issuesPool.length));
 	      if (this.state.loaded) {
 	        issueElem = _react2.default.createElement(
 	          'div',
@@ -26706,7 +26708,7 @@
 	              null,
 	              _react2.default.createElement(
 	                _reactRouter.Link,
-	                { className: 'float-xs-right', to: '/issue/' + Math.ceil(Math.random() * 100) },
+	                { className: 'float-xs-right', to: '/issue/' + issuesPool[getRandom(issuesPool.length) - 1] },
 	                ' ',
 	                _react2.default.createElement(
 	                  'button',
@@ -26727,7 +26729,7 @@
 	          )
 	        );
 	      }
-	      // 31660
+	      // 31660, 32319, 32323, 32320, 32324
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container' },

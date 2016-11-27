@@ -136,6 +136,8 @@ export default class Issue extends React.Component {
   render() {
     let issue = this.state.issue || {};
     let issueElem = 'Loading...';
+    let issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
+    console.log(getRandom(issuesPool.length))
     if(this.state.loaded) {
       issueElem =
       <div>
@@ -198,7 +200,7 @@ export default class Issue extends React.Component {
             </a>
 
             <div>
-              <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
+              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
             </div>
 
             <div>
@@ -207,7 +209,7 @@ export default class Issue extends React.Component {
         </issue>
       </div>
     }
-    // 31660
+    // 31660, 32319, 32323, 32320, 32324
     return (
       <div className='container'>
         {issueElem}
