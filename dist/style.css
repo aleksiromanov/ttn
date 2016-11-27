@@ -1,12 +1,34 @@
 body{
-	/*font-family: ''*/
+	padding-top: 50px;
 }
 
-h2{
-	font-size: 1em;
+h2.mt-1,.motivate-text b{
+	font-size: 0.9em;
+	font-weight: 100;
 	font-style: italic;
+	margin-top: 1em;
 }
 
+#customOpinionInput{
+	border-radius: 0;
+	border: 2px solid black;
+	color:black;
+
+}
+
+.next-issue-top-button{
+	position: fixed;
+	top:0;
+	right:0;
+}
+
+.next-issue-bottom-button{
+	display: none;;
+}
+
+.motivate-text{
+	margin-bottom: 0.5em;
+}
 
 .btn,#customOpinionInput{
 	margin-left: 0.1em;
@@ -15,6 +37,29 @@ h2{
 	border-radius: 0;
 	color:#00444a;
 }
+
+.add-button{
+	max-width: 18%;
+	margin-left: 0;
+	border-left: 0;
+	background-color: #ceefe9;
+	color: #00444a;
+	/*font-size: 0.9em;*/
+	font-weight: 700;
+	/*text-transform: */
+}
+
+#customOpinionInput{
+ 	max-width: 81%;
+ 	margin-right: 0;
+ 	border-right: 0;
+ }
+
+.add-button, #customOpinionInput{
+	display: inline-block;
+	vertical-align: top;
+}
+
 
 .btn-primary.active.focus,
 .btn-primary.active:focus, 
@@ -39,12 +84,6 @@ h2{
 	padding: .3em .6em
 }
 
-#customOpinionInput{
-	border-radius: 0;
-	border: 2px solid black;
-	color:black;
-
-}
 
 
 @media only screen and (min-width: 401px) {
