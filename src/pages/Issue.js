@@ -43,7 +43,7 @@ const getIssueStats = (issueId, cb) => {
 const increaseIssueStat = (issueId, issue, statsKey, newCount, cb) => {
     if(!NO_DB) {
       $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
-      "newobj=" + escape(`{"${statsKey}": ${newCount}}`) +"&amp;"+
+      "newobj=" + escape(`{"$set" : {"${statsKey}": ${newCount}}}`) +"&amp;"+
       "upsert=true").done( (response) => {
       cb(response);
     }).fail( (error) => {
