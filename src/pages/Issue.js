@@ -205,9 +205,9 @@ export default class Issue extends React.Component {
         <issue>
 
             <article>
-              <h2 className="mt-1">
+              <h2 className="mt-1 request-text">
                 What do you think about:
-                <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
+                <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1 next-issue-top-button'>Next Issue  >> </button></Link>
 
               </h2>
               <h3>
@@ -219,7 +219,7 @@ export default class Issue extends React.Component {
               </p>
             </article>
             <div>
-              <p> <b>Make them hear your voice: </b> </p>
+              <p className="motivate-text"> <b>Make them hear your voice: </b> </p>
             </div>
             <div>
               <button className={"btn " + this.getButtonStatus("follow")} type="button" data-reaction='follow' onClick={this.onReaction}>
@@ -270,7 +270,7 @@ export default class Issue extends React.Component {
             </a>
 
             <div>
-              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
+              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1 next-issue-bottom-button'>Next Issue  >> </button></Link>
             </div>
 
             <div>

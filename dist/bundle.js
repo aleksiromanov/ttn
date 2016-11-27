@@ -21753,7 +21753,7 @@
 	              null,
 	              _react2.default.createElement(
 	                'h2',
-	                { className: 'mt-1' },
+	                { className: 'mt-1 request-text' },
 	                'What do you think about:',
 	                _react2.default.createElement(
 	                  _reactRouter.Link,
@@ -21761,7 +21761,7 @@
 	                  ' ',
 	                  _react2.default.createElement(
 	                    'button',
-	                    { className: 'btn btn-primary mb-1' },
+	                    { className: 'btn btn-primary mb-1 next-issue-top-button' },
 	                    'Next Issue  >> '
 	                  )
 	                )
@@ -21787,7 +21787,7 @@
 	              null,
 	              _react2.default.createElement(
 	                'p',
-	                null,
+	                { className: 'motivate-text' },
 	                ' ',
 	                _react2.default.createElement(
 	                  'b',
@@ -21913,7 +21913,7 @@
 	                ' ',
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'btn btn-primary mb-1' },
+	                  { className: 'btn btn-primary mb-1 next-issue-bottom-button' },
 	                  'Next Issue  >> '
 	                )
 	              )
