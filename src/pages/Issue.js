@@ -94,13 +94,16 @@ export default class Issue extends React.Component {
         loaded: true
       },issue));
     })
-    $.get(`http://dev.hel.fi/openahjo/v1/issue/${issueId}/?format=json`).
-    done((data) => {
+    $.ajax({
+      url: `https://dev.hel.fi/openahjo/v1/issue/${issueId}/?format=jsonp`,
+      dataType: 'JSONP',
+      jsonpCallback: 'callback',
+      type: 'GET'
+    }).done((data) => {
       this.setState({
         issue: data
       })
-    })
-    .fail( (error) => {
+    }).fail( (error) => {
       alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
     })
   }
@@ -173,6 +176,7 @@ export default class Issue extends React.Component {
             <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default'>Next Issue  >> </button></Link>
           </div>
 
+      <p id='output'> </p>
       </issue>
     }
     return (
