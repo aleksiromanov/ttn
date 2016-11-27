@@ -86,7 +86,10 @@ export default class Issue extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.loadIssue(newProps.params.issueId)
+    this.setState({
+      prevState: null
+    })
+    this.loadIssue(newProps.params.issueId);
   }
 
   loadIssue(issueId) {
@@ -114,10 +117,18 @@ export default class Issue extends React.Component {
 
   onReaction(event) {
     const reactionId = $(event.currentTarget).attr('data-reaction');
+    let prevReactionCount = _.get(this.state,`prevState.${reactionId}`)
+    if( prevReactionCount &&  prevReactionCount !== _.get(this.state,`${reactionId}`)) {
+      console.log ('Already upvoted. skipping..')
+      return;
+    }
     this.setState({
+      prevState: _.cloneDeep(this.state),
       [reactionId]: this.state[reactionId] + 1,
       didAction: true
     });
+
+
 
     increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, (response) => {
       console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
@@ -142,7 +153,7 @@ export default class Issue extends React.Component {
               </h2>
               <p>
                 {issue.summary}
-                <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
+                <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
               </p>
             </article>
 

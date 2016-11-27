@@ -26518,6 +26518,9 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(newProps) {
+	      this.setState({
+	        prevState: null
+	      });
 	      this.loadIssue(newProps.params.issueId);
 	    }
 	  }, {
@@ -26553,7 +26556,14 @@
 	          _this3 = this;
 
 	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
-	      this.setState((_setState = {}, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
+	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
+	      if (prevReactionCount && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
+	        console.log('Already upvoted. skipping..');
+	        return;
+	      }
+	      this.setState((_setState = {
+	        prevState: _lodash2.default.cloneDeep(this.state)
+	      }, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
 
 	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, function (response) {
 	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
@@ -26590,7 +26600,7 @@
 	                issue.summary,
 	                _react2.default.createElement(
 	                  'a',
-	                  { href: 'https://dev.hel.fi/paatokset/asia/' + issue.register_id.replace(' ', '-').toLowerCase(), target: '_blank' },
+	                  { href: 'https://dev.hel.fi/paatokset/asia/' + (issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()), target: '_blank' },
 	                  ' Read more '
 	                )
 	              )
