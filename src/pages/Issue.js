@@ -205,13 +205,13 @@ export default class Issue extends React.Component {
         <issue>
 
             <article>
-              <h2 className="mt-1">
+              <h2 className="mt-1 request-text">
                 What do you think about:
-                <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
+                <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1 next-issue-top-button'>Next Issue  >> </button></Link>
 
               </h2>
               <h3>
-               {issue.subject} ?
+               {issue.subject}
               </h3>
               <p>
                 {_.get(issue,'summary') && issue.summary.substr(0, 150)+ '...'}
@@ -219,7 +219,7 @@ export default class Issue extends React.Component {
               </p>
             </article>
             <div>
-              <p> <b>Make them hear your voice: </b> </p>
+              <p className="motivate-text"> <b>Make them hear your voice: </b> </p>
             </div>
             <div>
               <button className={"btn " + this.getButtonStatus("follow")} type="button" data-reaction='follow' onClick={this.onReaction}>
@@ -255,7 +255,7 @@ export default class Issue extends React.Component {
 
             <form onSubmit={this.onCustomAdd} className="form-inline">
                 <input type='text' placeholder='Your custom opinion here' maxLength={20} id='customOpinionInput' className='form-control'/>
-                <button className='btn btn-default' type="submit"> Add </button>
+                <button className='btn btn-default add-button' type="submit"> Add </button>
             </form>
 
             <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
@@ -270,7 +270,7 @@ export default class Issue extends React.Component {
             </a>
 
             <div>
-              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
+              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1 next-issue-bottom-button'>Next Issue  >> </button></Link>
             </div>
 
             <div>
