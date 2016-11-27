@@ -21582,6 +21582,8 @@
 	  }
 	};
 
+	var commonFields = ['didAction', 'issue', 'loaded', 'prevState'];
+
 	var Issue = function (_React$Component) {
 	  _inherits(Issue, _React$Component);
 
@@ -21592,6 +21594,7 @@
 
 	    _this.onReaction = _this.onReaction.bind(_this);
 	    _this.loadIssue = _this.loadIssue.bind(_this);
+	    _this.onCustomAdd = _this.onCustomAdd.bind(_this);
 
 	    _this.state = {
 	      follow: 330,
@@ -21655,10 +21658,25 @@
 	      });
 	    }
 	  }, {
+	    key: 'onCustomAdd',
+	    value: function onCustomAdd(e) {
+	      var _this3 = this;
+
+	      var reactionId = (0, _jquery2.default)('#customOpinionInput').val();
+	      if (reactionId) {
+	        (0, _jquery2.default)('#customOpinionInput').val('');
+	        this.setState(_defineProperty({}, reactionId, 1));
+	        increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, 1, function (response) {
+	          console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
+	        });
+	        e.preventDefault();
+	      }
+	    }
+	  }, {
 	    key: 'onReaction',
 	    value: function onReaction(event) {
-	      var _setState,
-	          _this3 = this;
+	      var _setState2,
+	          _this4 = this;
 
 	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
 	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
@@ -21667,21 +21685,40 @@
 	        return;
 	      }
 	      var newCount = this.state[reactionId] + 1;
-	      this.setState((_setState = {
+	      this.setState((_setState2 = {
 	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId] || 0))
-	      }, _defineProperty(_setState, reactionId, newCount), _defineProperty(_setState, 'didAction', true), _setState));
+	      }, _defineProperty(_setState2, reactionId, newCount), _defineProperty(_setState2, 'didAction', true), _setState2));
 	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount, function (response) {
-	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
+	        console.log('on inserting ' + _this4.props.params.issueId + ', server responded ' + JSON.stringify(response));
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this5 = this;
+
 	      var issue = this.state.issue || {};
 	      var issueElem = 'Loading...';
 	      var issuesPool = [25435, 24524, 32319, 32320, 31660];
 	      console.log(getRandom(issuesPool.length));
 	      if (this.state.loaded) {
+	        var customOpinions = _lodash2.default.omit(this.state, ['_id', 'follow', 'upvote', 'downvote', 'share', 'demand-more-info', 'too-small-budget', 'too-expensive', 'didAction', 'issue', 'loaded', 'prevState']);
+
+	        var customOpinionsElem = _lodash2.default.map(_lodash2.default.keys(customOpinions).sort(function (a, b) {
+	          return _this5.state[b] - _this5.state[a];
+	        }), function (key) {
+	          return _react2.default.createElement(
+	            'button',
+	            { key: key, className: 'btn btn-outline-primary', type: 'button', 'data-reaction': key, onClick: _this5.onReaction },
+	            key,
+	            ' ',
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'tag tag-pill tag-primary' },
+	              _this5.state[key]
+	            )
+	          );
+	        });
 	        issueElem = _react2.default.createElement(
 	          'div',
 	          null,
@@ -21813,6 +21850,17 @@
 	                  { className: 'tag tag-pill tag-primary' },
 	                  this.state['too-small-budget']
 	                )
+	              ),
+	              customOpinionsElem
+	            ),
+	            _react2.default.createElement(
+	              'form',
+	              { onSubmit: this.onCustomAdd, className: 'form-inline' },
+	              _react2.default.createElement('input', { type: 'text', placeholder: 'Your custom opinion here', maxLength: 20, id: 'customOpinionInput', className: 'form-control' }),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-default', type: 'submit' },
+	                ' Add '
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -21838,7 +21886,7 @@
 	                ' ',
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'btn btn-outline-default mb-1' },
+	                  { className: 'btn btn-primary mb-1' },
 	                  'Next Issue  >> '
 	                )
 	              )

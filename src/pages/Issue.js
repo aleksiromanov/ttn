@@ -65,11 +65,13 @@ const increaseIssueStat = (issueId, issue, statsKey, newCount, cb) => {
   }
 }
 
+const commonFields = ['didAction', 'issue', 'loaded', 'prevState']
 export default class Issue extends React.Component {
   constructor() {
     super();
     this.onReaction = this.onReaction.bind(this);
     this.loadIssue = this.loadIssue.bind(this);
+    this.onCustomAdd = this.onCustomAdd.bind(this);
 
     this.state = {
       follow: 330,
@@ -128,6 +130,20 @@ export default class Issue extends React.Component {
     })
   }
 
+  onCustomAdd(e) {
+    const reactionId = $('#customOpinionInput').val();
+    if (reactionId) {
+      $('#customOpinionInput').val('');
+      this.setState({
+        [reactionId]: 1
+      })
+      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, 1,(response) => {
+        console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
+      });
+      e.preventDefault()
+    }
+  }
+
   onReaction(event) {
     const reactionId = $(event.currentTarget).attr('data-reaction');
     let prevReactionCount = _.get(this.state,`prevState.${reactionId}`)
@@ -153,6 +169,13 @@ export default class Issue extends React.Component {
     let issuesPool = [25435,24524, 32319, 32320, 31660];
     console.log(getRandom(issuesPool.length))
     if(this.state.loaded) {
+      const customOpinions = _.omit(this.state, ['_id', 'follow','upvote','downvote','share','demand-more-info','too-small-budget','too-expensive', 'didAction', 'issue', 'loaded', 'prevState'])
+
+      let customOpinionsElem = _.map(_.keys(customOpinions).sort((a,b) =>{return this.state[b] - this.state[a]}), (key) => {
+        return  <button key={key} className="btn btn-outline-primary" type="button" data-reaction={key} onClick={this.onReaction}>
+                {key} <span className="tag tag-pill tag-primary">{this.state[key]}</span>
+              </button>
+      })
       issueElem =
       <div>
           <h1>
@@ -205,6 +228,12 @@ export default class Issue extends React.Component {
               <button className="btn btn-outline-primary" type="button" data-reaction='too-small-budget' onClick={this.onReaction}>
                 Too small budget! <span className="tag tag-pill tag-primary">{this.state['too-small-budget']}</span>
               </button>
+              {customOpinionsElem}
+            </form>
+
+            <form onSubmit={this.onCustomAdd} className="form-inline">
+                <input type='text' placeholder='Your custom opinion here' maxLength={20} id='customOpinionInput' className='form-control'/>
+                <button className='btn btn-default' type="submit"> Add </button>
             </form>
 
             <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
@@ -219,7 +248,7 @@ export default class Issue extends React.Component {
             </a>
 
             <div>
-              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
+              <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
             </div>
 
             <div>
