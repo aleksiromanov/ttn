@@ -26554,11 +26554,13 @@
 	};
 
 	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, cb) {
-	  _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow":1}&amp;') + "&amp;" + "upsert=true").done(function (response) {
-	    cb(response);
-	  }).fail(function (error) {
-	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
-	  });
+	  if (!NO_DB) {
+	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow":1}&amp;') + "&amp;" + "upsert=true").done(function (response) {
+	      cb(response);
+	    }).fail(function (error) {
+	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
+	    });
+	  }
 	};
 
 	var Issue = function (_React$Component) {

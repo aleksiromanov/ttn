@@ -50,13 +50,15 @@ const getIssueStats = (issueId, cb) => {
 }
 
 const increaseIssueStat = (issueId, issue, statsKey, cb) => {
-    $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
+    if(!NO_DB) {
+      $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
       "newobj=" + escape('{"follow":1}&amp;') +"&amp;"+
       "upsert=true").done( (response) => {
       cb(response);
     }).fail( (error) => {
       alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
     });
+  }
 }
 
 export default class Issue extends React.Component {
