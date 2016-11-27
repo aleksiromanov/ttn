@@ -211,7 +211,7 @@ export default class Issue extends React.Component {
 
               </h2>
               <h3>
-               {issue.subject} ?
+               {issue.subject}
               </h3>
               <p>
                 {_.get(issue,'summary') && issue.summary.substr(0, 150)+ '...'}
