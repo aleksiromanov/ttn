@@ -26562,9 +26562,8 @@
 	        return;
 	      }
 	      this.setState((_setState = {
-	        prevState: _lodash2.default.cloneDeep(this.state)
+	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId]))
 	      }, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
-
 	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, function (response) {
 	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
 	      });
@@ -26728,6 +26727,7 @@
 	          )
 	        );
 	      }
+	      // 31660
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container' },

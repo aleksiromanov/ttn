@@ -123,13 +123,10 @@ export default class Issue extends React.Component {
       return;
     }
     this.setState({
-      prevState: _.cloneDeep(this.state),
+      prevState: _.extend({}, this.state.prevState, {[reactionId]: this.state[reactionId]}),
       [reactionId]: this.state[reactionId] + 1,
       didAction: true
     });
-
-
-
     increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, (response) => {
       console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
     });
@@ -210,6 +207,7 @@ export default class Issue extends React.Component {
         </issue>
       </div>
     }
+    // 31660
     return (
       <div className='container'>
         {issueElem}
