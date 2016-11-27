@@ -187,15 +187,17 @@ export default class Issue extends React.Component {
       })
       issueElem =
       <div>
-          <h1>
-            Two Minutes For My City
-          </h1>
+          <h5>
+            Two Minutes For My City presents
+          </h5>
 
         <issue>
 
             <article>
               <h2 className="mt-1">
                 What do you think about:
+                <Link className='float-xs-right' to={`/issue/${issuesPool[getRandom(issuesPool.length)-1]}`}> <button className='btn btn-primary mb-1'>Next Issue  >> </button></Link>
+
               </h2>
               <h3>
                {issue.subject} ?

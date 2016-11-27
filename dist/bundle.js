@@ -21731,9 +21731,9 @@
 	          'div',
 	          null,
 	          _react2.default.createElement(
-	            'h1',
+	            'h5',
 	            null,
-	            'Two Minutes For My City'
+	            'Two Minutes For My City presents'
 	          ),
 	          _react2.default.createElement(
 	            'issue',
@@ -21744,7 +21744,17 @@
 	              _react2.default.createElement(
 	                'h2',
 	                { className: 'mt-1' },
-	                'What do you think about:'
+	                'What do you think about:',
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'float-xs-right', to: '/issue/' + issuesPool[getRandom(issuesPool.length) - 1] },
+	                  ' ',
+	                  _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn btn-primary mb-1' },
+	                    'Next Issue  >> '
+	                  )
+	                )
 	              ),
 	              _react2.default.createElement(
 	                'h3',
