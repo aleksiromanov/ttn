@@ -255,7 +255,7 @@ export default class Issue extends React.Component {
 
             <form onSubmit={this.onCustomAdd} className="form-inline">
                 <input type='text' placeholder='Your custom opinion here' maxLength={20} id='customOpinionInput' className='form-control'/>
-                <button className='btn btn-default' type="submit"> Add </button>
+                <button className='btn btn-default add-button' type="submit"> Add </button>
             </form>
 
             <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
