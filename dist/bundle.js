@@ -26756,11 +26756,6 @@
 	                'Next Issue  >> '
 	              )
 	            )
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            { id: 'output' },
-	            ' '
 	          )
 	        );
 	      }

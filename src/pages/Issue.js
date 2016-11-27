@@ -177,8 +177,6 @@ export default class Issue extends React.Component {
           <div>
             <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default'>Next Issue  >> </button></Link>
           </div>
-
-      <p id='output'> </p>
       </issue>
     }
     return (
