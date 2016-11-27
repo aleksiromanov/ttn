@@ -26429,7 +26429,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var ISSUES_COLLECTION_URL = '/mongo/decisions/issues';
+	var ISSUES_COLLECTION_URL = window.location.toString().match('localhost|file') ? 'http://localhost:27080/decisions/issues' : '/mongo/decisions/issues';
 	var getRandom = function getRandom() {
 	  var limit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 50;
 
