@@ -26678,8 +26678,7 @@
 	                  { className: 'tag tag-pill tag-primary' },
 	                  this.state['too-small-budget']
 	                )
-	              ),
-	              _react2.default.createElement('input', { type: 'text', className: 'form-control reaction-input', placeholder: 'Add new reaction' })
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'a',

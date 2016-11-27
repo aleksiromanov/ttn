@@ -176,7 +176,6 @@ export default class Issue extends React.Component {
               <button className="btn btn-outline-primary" type="button" data-reaction='too-small-budget' onClick={this.onReaction}>
                 Too small budget! <span className="tag tag-pill tag-primary">{this.state['too-small-budget']}</span>
               </button>
-              <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
             </form>
 
             <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
