@@ -92,6 +92,7 @@ export default class Issue extends React.Component {
     this.loadIssue(this.props.params.issueId);
   }
 
+
   componentWillReceiveProps(newProps) {
     this.setState({
       prevState: null
@@ -152,6 +153,16 @@ export default class Issue extends React.Component {
     }
   }
 
+  getButtonStatus(reactionId) {
+    let prevReactionCount = _.get(this.state,`prevState.${reactionId}`)
+    if( _.isNumber(prevReactionCount) &&  prevReactionCount !== _.get(this.state,`${reactionId}`)) {
+    return "btn-primary"
+
+    } else {
+    return "btn-outline-primary"
+
+    }
+  }
   onReaction(event) {
     const reactionId = $(event.currentTarget).attr('data-reaction');
     let prevReactionCount = _.get(this.state,`prevState.${reactionId}`)
@@ -181,7 +192,7 @@ export default class Issue extends React.Component {
 
       let customOpinionsElem = _.map(_.keys(customOpinions).sort((a,b) =>{return this.state[b] - this.state[a]}), (key) => {
         if (!_.isNumber(this.state[key])) return ''
-        return  <button key={key} className="btn btn-outline-primary" type="button" data-reaction={key} onClick={this.onReaction}>
+        return  <button key={key} className={"btn " + this.getButtonStatus(key)} type="button" data-reaction={key} onClick={this.onReaction}>
                 {key} <span className="tag tag-pill tag-primary">{this.state[key]}</span>
               </button>
       })
@@ -211,16 +222,16 @@ export default class Issue extends React.Component {
               <p> <b>Make them hear your voice: </b> </p>
             </div>
             <div>
-              <button className="btn btn-outline-primary" type="button" data-reaction='follow' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("follow")} type="button" data-reaction='follow' onClick={this.onReaction}>
                 Follow <span className="tag tag-pill tag-primary">{this.state.follow}</span>
               </button>
-              <button className="btn btn-outline-primary" type="button" data-reaction='upvote' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("upvote")} type="button" data-reaction='upvote' onClick={this.onReaction}>
                 Upvote <span className="tag tag-pill tag-primary">{this.state.upvote}</span>
               </button>
-              <button className="btn btn-outline-primary" type="button" data-reaction='downvote' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("downvote")} type="button" data-reaction='downvote' onClick={this.onReaction}>
                 Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
               </button>
-              <a className="btn btn-outline-primary"
+              <a className={"btn " + this.getButtonStatus("share")}
                 data-reaction='share'
                 onClick={this.onReaction}
                 href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
@@ -230,13 +241,13 @@ export default class Issue extends React.Component {
             </div>
 
             <form className="form-inline">
-              <button className="btn btn-outline-primary" type="button" data-reaction='demand-more-info' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("demand-more-info")} type="button" data-reaction='demand-more-info' onClick={this.onReaction}>
                 Demand More Information <span className="tag tag-pill tag-primary">{this.state['demand-more-info']}</span>
               </button>
-              <button className="btn btn-outline-primary" type="button" data-reaction='too-expensive' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("too-expensive")} type="button" data-reaction='too-expensive' onClick={this.onReaction}>
                 Too expensive! <span className="tag tag-pill tag-primary">{this.state['too-expensive']}</span>
               </button>
-              <button className="btn btn-outline-primary" type="button" data-reaction='too-small-budget' onClick={this.onReaction}>
+              <button className={"btn " + this.getButtonStatus("too-small-budget")} type="button" data-reaction='too-small-budget' onClick={this.onReaction}>
                 Too small budget! <span className="tag tag-pill tag-primary">{this.state['too-small-budget']}</span>
               </button>
               {customOpinionsElem}
