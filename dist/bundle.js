@@ -21680,6 +21680,16 @@
 	      }
 	    }
 	  }, {
+	    key: 'getButtonStatus',
+	    value: function getButtonStatus(reactionId) {
+	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
+	      if (_lodash2.default.isNumber(prevReactionCount) && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
+	        return "btn-primary";
+	      } else {
+	        return "btn-outline-primary";
+	      }
+	    }
+	  }, {
 	    key: 'onReaction',
 	    value: function onReaction(event) {
 	      var _setState2,
@@ -21717,7 +21727,7 @@
 	          if (!_lodash2.default.isNumber(_this5.state[key])) return '';
 	          return _react2.default.createElement(
 	            'button',
-	            { key: key, className: 'btn btn-outline-primary', type: 'button', 'data-reaction': key, onClick: _this5.onReaction },
+	            { key: key, className: "btn " + _this5.getButtonStatus(key), type: 'button', 'data-reaction': key, onClick: _this5.onReaction },
 	            key,
 	            ' ',
 	            _react2.default.createElement(
@@ -21793,7 +21803,7 @@
 	              null,
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("follow"), type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
 	                'Follow ',
 	                _react2.default.createElement(
 	                  'span',
@@ -21803,7 +21813,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("upvote"), type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
 	                'Upvote ',
 	                _react2.default.createElement(
 	                  'span',
@@ -21813,7 +21823,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("downvote"), type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
 	                'Downvote ',
 	                _react2.default.createElement(
 	                  'span',
@@ -21823,7 +21833,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'a',
-	                { className: 'btn btn-outline-primary',
+	                { className: "btn " + this.getButtonStatus("share"),
 	                  'data-reaction': 'share',
 	                  onClick: this.onReaction,
 	                  href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
@@ -21841,7 +21851,7 @@
 	              { className: 'form-inline' },
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'demand-more-info', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("demand-more-info"), type: 'button', 'data-reaction': 'demand-more-info', onClick: this.onReaction },
 	                'Demand More Information ',
 	                _react2.default.createElement(
 	                  'span',
@@ -21851,7 +21861,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-expensive', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("too-expensive"), type: 'button', 'data-reaction': 'too-expensive', onClick: this.onReaction },
 	                'Too expensive! ',
 	                _react2.default.createElement(
 	                  'span',
@@ -21861,7 +21871,7 @@
 	              ),
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-small-budget', onClick: this.onReaction },
+	                { className: "btn " + this.getButtonStatus("too-small-budget"), type: 'button', 'data-reaction': 'too-small-budget', onClick: this.onReaction },
 	                'Too small budget! ',
 	                _react2.default.createElement(
 	                  'span',
