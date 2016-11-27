@@ -2,8 +2,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import injectTapEventPlugin from 'react-tap-event-plugin';
-// injectTapEventPlugin();
 import App from './pages/App.js'
 import Issue from './pages/Issue.js'
 

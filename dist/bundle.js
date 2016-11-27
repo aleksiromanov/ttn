@@ -75,8 +75,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import injectTapEventPlugin from 'react-tap-event-plugin';
-	// injectTapEventPlugin();
 	// vim: sw=2:
 
 	var appHistory = (0, _reactRouter.useRouterHistory)(_history.createHashHistory)({ queryKey: false });
