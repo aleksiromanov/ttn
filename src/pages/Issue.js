@@ -8,7 +8,7 @@ const ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
 }
-const NO_DB = true;
+const NO_DB = false;
 const getIssueStats = (issueId, cb) => {
   if(NO_DB) {
     cb({
@@ -21,24 +21,9 @@ const getIssueStats = (issueId, cb) => {
     return;
   }
 
-    $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (issue) => {
-
-    }).fail( (responseText) => {
-      try {
-      let result = JSON.parse(responseText.responseText);
-      }catch(e) {
-        console.error(`Error occurde`, e)
-        cb({
-        follow: 0
-      });
-        return;
-      }
-      if(!result.ok) {
-        alert(`Error occured, plz try again. Error msg: ${JSON.stringify(result)}`);
-        return;
-      }
-      let issue = result.results[0];
-      console.log (JSON.stringify(issue))
+    $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (result) => {
+      let issue = _.get(result, 'results.0', {});
+      console.log(JSON.stringify(issue))
       cb({
         follow: issue.follow || 0,
         upvote: getRandom(),
@@ -46,13 +31,17 @@ const getIssueStats = (issueId, cb) => {
         share: getRandom(),
         'demand-more-info': getRandom()
       })
-    });
+    }).fail( (responseText) => {
+        alert(`Error occured, plz try again. Error msg: ${JSON.stringify(responseText)}`);
+      }
+    );
 }
 
-const increaseIssueStat = (issueId, issue, statsKey, cb) => {
+const increaseIssueStat = (issueId, issue, statsKey, newCount, cb) => {
     if(!NO_DB) {
+      debugger;
       $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
-      "newobj=" + escape('{"follow":1}&amp;') +"&amp;"+
+      "newobj=" + escape(`{"follow": ${newCount}}`) +"&amp;"+
       "upsert=true").done( (response) => {
       cb(response);
     }).fail( (error) => {
@@ -122,12 +111,13 @@ export default class Issue extends React.Component {
       console.log ('Already upvoted. skipping..')
       return;
     }
+    const newCount = this.state[reactionId] + 1
     this.setState({
       prevState: _.extend({}, this.state.prevState, {[reactionId]: this.state[reactionId]}),
-      [reactionId]: this.state[reactionId] + 1,
+      [reactionId]: newCount,
       didAction: true
     });
-    increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, (response) => {
+    increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount,(response) => {
       console.log (`on inserting ${this.props.params.issueId}, server responded ${JSON.stringify(response)}` )
     });
 

@@ -26435,7 +26435,7 @@
 
 	  return Math.ceil(Math.random() * 1000 % limit);
 	};
-	var NO_DB = true;
+	var NO_DB = false;
 	var getIssueStats = function getIssueStats(issueId, cb) {
 	  if (NO_DB) {
 	    cb({
@@ -26448,21 +26448,8 @@
 	    return;
 	  }
 
-	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (issue) {}).fail(function (responseText) {
-	    try {
-	      var _result = JSON.parse(responseText.responseText);
-	    } catch (e) {
-	      console.error('Error occurde', e);
-	      cb({
-	        follow: 0
-	      });
-	      return;
-	    }
-	    if (!result.ok) {
-	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(result));
-	      return;
-	    }
-	    var issue = result.results[0];
+	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (result) {
+	    var issue = _lodash2.default.get(result, 'results.0', {});
 	    console.log(JSON.stringify(issue));
 	    cb({
 	      follow: issue.follow || 0,
@@ -26471,12 +26458,15 @@
 	      share: getRandom(),
 	      'demand-more-info': getRandom()
 	    });
+	  }).fail(function (responseText) {
+	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(responseText));
 	  });
 	};
 
-	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, cb) {
+	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, newCount, cb) {
 	  if (!NO_DB) {
-	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow":1}&amp;') + "&amp;" + "upsert=true").done(function (response) {
+	    debugger;
+	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow": ' + newCount + '}') + "&amp;" + "upsert=true").done(function (response) {
 	      cb(response);
 	    }).fail(function (error) {
 	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
@@ -26561,10 +26551,11 @@
 	        console.log('Already upvoted. skipping..');
 	        return;
 	      }
+	      var newCount = this.state[reactionId] + 1;
 	      this.setState((_setState = {
 	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId]))
-	      }, _defineProperty(_setState, reactionId, this.state[reactionId] + 1), _defineProperty(_setState, 'didAction', true), _setState));
-	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, function (response) {
+	      }, _defineProperty(_setState, reactionId, newCount), _defineProperty(_setState, 'didAction', true), _setState));
+	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount, function (response) {
 	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
 	      });
 	    }
