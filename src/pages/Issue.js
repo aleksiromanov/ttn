@@ -150,7 +150,7 @@ export default class Issue extends React.Component {
   render() {
     let issue = this.state.issue || {};
     let issueElem = 'Loading...';
-    let issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
+    let issuesPool = [25435,24524, 32319, 32320, 31660];
     console.log(getRandom(issuesPool.length))
     if(this.state.loaded) {
       issueElem =

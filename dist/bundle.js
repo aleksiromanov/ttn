@@ -21679,7 +21679,7 @@
 	    value: function render() {
 	      var issue = this.state.issue || {};
 	      var issueElem = 'Loading...';
-	      var issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
+	      var issuesPool = [25435, 24524, 32319, 32320, 31660];
 	      console.log(getRandom(issuesPool.length));
 	      if (this.state.loaded) {
 	        issueElem = _react2.default.createElement(
