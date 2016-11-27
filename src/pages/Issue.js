@@ -24,7 +24,6 @@ const getIssueStats = (issueId, cb) => {
     $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (result) => {
       let issue = _.get(result, 'results.0', {});
       console.log(JSON.stringify(issue))
-      debugger;
       cb(_.extend({
         follow: 0,
         upvote: 0,

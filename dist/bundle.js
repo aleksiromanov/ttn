@@ -26451,7 +26451,6 @@
 	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (result) {
 	    var issue = _lodash2.default.get(result, 'results.0', {});
 	    console.log(JSON.stringify(issue));
-	    debugger;
 	    cb(_lodash2.default.extend({
 	      follow: 0,
 	      upvote: 0,
