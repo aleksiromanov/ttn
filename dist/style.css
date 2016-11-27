@@ -1,3 +1,51 @@
+body{
+	/*font-family: ''*/
+}
+
+h2{
+	font-size: 1em;
+	font-style: italic;
+}
+
+
+.btn,#customOpinionInput{
+	margin-left: 0.1em;
+	margin-top: 0.1em;
+	border: 2px solid #00444a;
+	border-radius: 0;
+	color:#00444a;
+}
+
+.btn-primary.active.focus,
+.btn-primary.active:focus, 
+.btn-primary.active:hover, 
+.btn-primary:active.focus, 
+.btn-primary:active:focus, 
+.btn-primary:active:hover,
+.open>.btn-primary.dropdown-toggle.focus, 
+.open>.btn-primary.dropdown-toggle:focus,
+ .open>.btn-primary.dropdown-toggle:hover,.btn-primary{
+	color:#ffffff;
+	background-color:#00444a !important;
+}
+
+.btn-primary .tag-primary{
+	background-color: #ffffff;
+	color:black;
+}
+.btn-outline-primary .tag-primary{
+	background-color: #ceefe9;
+	color:black;
+	padding: .3em .6em
+}
+
+#customOpinionInput{
+	border-radius: 0;
+	border: 2px solid black;
+	color:black;
+
+}
+
 
 @media only screen and (min-width: 401px) {
     div.paper {
