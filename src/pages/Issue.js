@@ -170,12 +170,16 @@ export default class Issue extends React.Component {
               <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
             </form>
 
-            <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
-              Petitiong
-            </button>
-            <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
+            <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
+               href="https://www.kansalaisaloite.fi/fi/aloite"
+                target="_blank">
+              Make a Petition
+            </a>
+            <a className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}
+              href={`https://www.facebook.com/search/events/?q=${escape(issue.subject)}`}
+              target="_blank">
               Make meeting on FB
-            </button>
+            </a>
 
             <div>
               <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>

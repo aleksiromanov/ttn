@@ -26657,13 +26657,17 @@
 	              _react2.default.createElement('input', { type: 'text', className: 'form-control reaction-input', placeholder: 'Add new reaction' })
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
-	              'Petitiong'
+	              'a',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
+	                href: 'https://www.kansalaisaloite.fi/fi/aloite',
+	                target: '_blank' },
+	              'Make a Petition'
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
+	              'a',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
+	                href: 'https://www.facebook.com/search/events/?q=' + escape(issue.subject),
+	                target: '_blank' },
 	              'Make meeting on FB'
 	            ),
 	            _react2.default.createElement(
