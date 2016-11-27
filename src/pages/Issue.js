@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 
 
-const ISSUES_COLLECTION_URL = 'http://localhost:27080/decisions/issues';
+const ISSUES_COLLECTION_URL = '/mongo/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
 }
