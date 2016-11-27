@@ -21582,7 +21582,8 @@
 	  }
 	};
 
-	var commonFields = ['didAction', 'issue', 'loaded', 'prevState'];
+	var commonFields = ['issue', 'loaded', 'prevState'];
+	var nonCustomFields = ['_id', 'follow', 'upvote', 'downvote', 'share', 'demand-more-info', 'too-small-budget', 'too-expensive', 'didAction', 'issue', 'loaded', 'prevState'];
 
 	var Issue = function (_React$Component) {
 	  _inherits(Issue, _React$Component);
@@ -21632,8 +21633,14 @@
 	      this.setState({
 	        loaded: false
 	      });
+	      var dropedKeysObj = _lodash2.default.cloneDeep(this.state);
+	      _lodash2.default.omit(dropedKeysObj, commonFields);
+	      dropedKeysObj = _lodash2.default.mapValues(dropedKeysObj, function (val) {
+	        return null;
+	      });
+
 	      getIssueStats(issueId, function (issue) {
-	        _this2.setState(_lodash2.default.extend({
+	        _this2.setState(_lodash2.default.extend(dropedKeysObj, {
 	          loaded: true
 	        }, issue));
 	      });
@@ -21702,11 +21709,12 @@
 	      var issuesPool = [25435, 24524, 32319, 32320, 31660];
 	      console.log(getRandom(issuesPool.length));
 	      if (this.state.loaded) {
-	        var customOpinions = _lodash2.default.omit(this.state, ['_id', 'follow', 'upvote', 'downvote', 'share', 'demand-more-info', 'too-small-budget', 'too-expensive', 'didAction', 'issue', 'loaded', 'prevState']);
+	        var customOpinions = _lodash2.default.omit(this.state, nonCustomFields);
 
 	        var customOpinionsElem = _lodash2.default.map(_lodash2.default.keys(customOpinions).sort(function (a, b) {
 	          return _this5.state[b] - _this5.state[a];
 	        }), function (key) {
+	          if (!_lodash2.default.isNumber(_this5.state[key])) return '';
 	          return _react2.default.createElement(
 	            'button',
 	            { key: key, className: 'btn btn-outline-primary', type: 'button', 'data-reaction': key, onClick: _this5.onReaction },

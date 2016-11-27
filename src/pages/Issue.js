@@ -65,7 +65,8 @@ const increaseIssueStat = (issueId, issue, statsKey, newCount, cb) => {
   }
 }
 
-const commonFields = ['didAction', 'issue', 'loaded', 'prevState']
+const commonFields = ['issue', 'loaded', 'prevState']
+const nonCustomFields = ['_id', 'follow','upvote','downvote','share','demand-more-info','too-small-budget','too-expensive', 'didAction', 'issue', 'loaded', 'prevState'];
 export default class Issue extends React.Component {
   constructor() {
     super();
@@ -102,10 +103,17 @@ export default class Issue extends React.Component {
     this.setState({
         loaded: false
     })
+    let dropedKeysObj = _.cloneDeep(this.state);
+    _.omit(dropedKeysObj, commonFields);
+    dropedKeysObj = _.mapValues(dropedKeysObj, (val) => {
+      return null;
+    })
+
+
     getIssueStats(issueId, (issue) => {
-      this.setState(_.extend({
+      this.setState(_.extend(dropedKeysObj, {
         loaded: true
-      },issue));
+      }, issue));
     })
     $.ajax({
       url: `https://dev.hel.fi/openahjo/v1/issue/${issueId}/?format=jsonp`,
@@ -169,9 +177,10 @@ export default class Issue extends React.Component {
     let issuesPool = [25435,24524, 32319, 32320, 31660];
     console.log(getRandom(issuesPool.length))
     if(this.state.loaded) {
-      const customOpinions = _.omit(this.state, ['_id', 'follow','upvote','downvote','share','demand-more-info','too-small-budget','too-expensive', 'didAction', 'issue', 'loaded', 'prevState'])
+      const customOpinions = _.omit(this.state, nonCustomFields)
 
       let customOpinionsElem = _.map(_.keys(customOpinions).sort((a,b) =>{return this.state[b] - this.state[a]}), (key) => {
+        if (!_.isNumber(this.state[key])) return ''
         return  <button key={key} className="btn btn-outline-primary" type="button" data-reaction={key} onClick={this.onReaction}>
                 {key} <span className="tag tag-pill tag-primary">{this.state[key]}</span>
               </button>
