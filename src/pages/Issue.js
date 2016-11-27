@@ -24,14 +24,17 @@ const getIssueStats = (issueId, cb) => {
     $.get(`${ISSUES_COLLECTION_URL}/_find?criteria=${escape('{"_id": '+issueId + '}')}`).done( (result) => {
       let issue = _.get(result, 'results.0', {});
       console.log(JSON.stringify(issue))
-      cb({
-        follow: issue.follow || 0,
-        upvote: getRandom(),
-        downvote: getRandom(),
-        share: getRandom(),
-        'demand-more-info': getRandom()
-      })
-    }).fail( (responseText) => {
+      debugger;
+      cb(_.extend({
+        follow: 0,
+        upvote: 0,
+        downvote: 0,
+        share: 0,
+        'demand-more-info': 0,
+        'too-small-budget': 0,
+        'too-expensive': 0
+      },_.omit(issue, '_id')))
+     }).fail( (responseText) => {
         alert(`Error occured, plz try again. Error msg: ${JSON.stringify(responseText)}`);
       }
     );
@@ -39,9 +42,8 @@ const getIssueStats = (issueId, cb) => {
 
 const increaseIssueStat = (issueId, issue, statsKey, newCount, cb) => {
     if(!NO_DB) {
-      debugger;
       $.post(`${ISSUES_COLLECTION_URL}/_update`, "criteria=" + escape(`{"_id": ${issueId} }`) +"&amp;"+
-      "newobj=" + escape(`{"follow": ${newCount}}`) +"&amp;"+
+      "newobj=" + escape(`{"${statsKey}": ${newCount}}`) +"&amp;"+
       "upsert=true").done( (response) => {
       cb(response);
     }).fail( (error) => {

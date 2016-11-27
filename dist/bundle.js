@@ -26451,13 +26451,16 @@
 	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (result) {
 	    var issue = _lodash2.default.get(result, 'results.0', {});
 	    console.log(JSON.stringify(issue));
-	    cb({
-	      follow: issue.follow || 0,
-	      upvote: getRandom(),
-	      downvote: getRandom(),
-	      share: getRandom(),
-	      'demand-more-info': getRandom()
-	    });
+	    debugger;
+	    cb(_lodash2.default.extend({
+	      follow: 0,
+	      upvote: 0,
+	      downvote: 0,
+	      share: 0,
+	      'demand-more-info': 0,
+	      'too-small-budget': 0,
+	      'too-expensive': 0
+	    }, _lodash2.default.omit(issue, '_id')));
 	  }).fail(function (responseText) {
 	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(responseText));
 	  });
@@ -26465,8 +26468,7 @@
 
 	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, newCount, cb) {
 	  if (!NO_DB) {
-	    debugger;
-	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"follow": ' + newCount + '}') + "&amp;" + "upsert=true").done(function (response) {
+	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"' + statsKey + '": ' + newCount + '}') + "&amp;" + "upsert=true").done(function (response) {
 	      cb(response);
 	    }).fail(function (error) {
 	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
