@@ -130,8 +130,7 @@ export default class Issue extends React.Component {
       issueElem =
       <issue>
           <article>
-            <h2>
-              <a> &lt;&lt; </a>
+            <h2 className="mt-1">
               {issue.subject}
             </h2>
             <p>
@@ -151,7 +150,6 @@ export default class Issue extends React.Component {
               Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
             </button>
             <a className="btn btn-outline-primary"
-              type="button"
               data-reaction='share'
               onClick={this.onReaction}
               href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
@@ -175,7 +173,11 @@ export default class Issue extends React.Component {
           </button>
 
           <div>
-            <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default'>Next Issue  >> </button></Link>
+            <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
+          </div>
+
+          <div>
+            <a href="https://www.facebook.com/TwoMinutesForMyCity/" target="_blank"> Join our FB page </a>
           </div>
       </issue>
     }

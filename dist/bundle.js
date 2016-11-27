@@ -61,10 +61,6 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _App = __webpack_require__(179);
-
-	var _App2 = _interopRequireDefault(_App);
-
 	var _Issue = __webpack_require__(235);
 
 	var _Issue2 = _interopRequireDefault(_Issue);
@@ -75,9 +71,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// vim: sw=2:
+	var appHistory = (0, _reactRouter.useRouterHistory)(_history.createHashHistory)({ queryKey: false }); // vim: sw=2:
 
-	var appHistory = (0, _reactRouter.useRouterHistory)(_history.createHashHistory)({ queryKey: false });
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: appHistory },
@@ -21493,79 +21488,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(180);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // vim: sw=2:
-
-	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
-
-	  function App() {
-	    _classCallCheck(this, App);
-
-	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
-
-	    _this.state = {};
-	    return _this;
-	  }
-
-	  _createClass(App, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      this.onClick = this.onClick.bind(this);
-	    }
-	  }, {
-	    key: 'onClick',
-	    value: function onClick() {
-	      alert('No idea about?!');
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'container' },
-	        _react2.default.createElement(
-	          'button',
-	          { className: 'btn', onClick: this.onClick },
-	          ' Sign in '
-	        ),
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/issue/123' },
-	          ' #123 '
-	        )
-	      );
-	    }
-	  }]);
-
-	  return App;
-	}(_react2.default.Component);
-
-	exports.default = App;
-
-/***/ },
+/* 179 */,
 /* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -26648,12 +26571,7 @@
 	            null,
 	            _react2.default.createElement(
 	              'h2',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                null,
-	                ' << '
-	              ),
+	              { className: 'mt-1' },
 	              issue.subject
 	            ),
 	            _react2.default.createElement(
@@ -26703,7 +26621,6 @@
 	            _react2.default.createElement(
 	              'a',
 	              { className: 'btn btn-outline-primary',
-	                type: 'button',
 	                'data-reaction': 'share',
 	                onClick: this.onReaction,
 	                href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
@@ -26750,9 +26667,18 @@
 	              ' ',
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-default' },
+	                { className: 'btn btn-outline-default mb-1' },
 	                'Next Issue  >> '
 	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'a',
+	              { href: 'https://www.facebook.com/TwoMinutesForMyCity/', target: '_blank' },
+	              ' Join our FB page '
 	            )
 	          )
 	        );

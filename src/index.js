@@ -2,7 +2,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './pages/App.js'
 import Issue from './pages/Issue.js'
 
 import {Router, Redirect, IndexRoute, Route, useRouterHistory, browserHistory} from 'react-router';
