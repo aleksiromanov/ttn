@@ -61,13 +61,13 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Issue = __webpack_require__(235);
+	var _Issue = __webpack_require__(179);
 
 	var _Issue2 = _interopRequireDefault(_Issue);
 
 	var _reactRouter = __webpack_require__(180);
 
-	var _history = __webpack_require__(236);
+	var _history = __webpack_require__(235);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21488,7 +21488,388 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 179 */,
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(260);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _reactRouter = __webpack_require__(180);
+
+	var _lodash = __webpack_require__(261);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var translateToLocalLanguage = function translateToLocalLanguage(text, cb) {
+	  if (navigator.language.toLowerCase().match('fi') || navigator.language.toLowerCase().match('se')) {
+	    cb(text);
+	    return;
+	  }
+	  _jquery2.default.get('https://www.googleapis.com/language/translate/v2?q=' + escape(text) + '&target=en&format=text&source=fi&key=AIzaSyB9ucX9ZnYJpUIm9tZWxP_pzvLZGO7OD4o').done(function (result) {
+	    cb(_lodash2.default.get(result, 'data.translations[0].translatedText') + ' (translated)' || text);
+	  }).fail(function (err) {
+	    console.error(err);
+	    cb(text);
+	  });
+	};
+
+	var ISSUES_COLLECTION_URL = window.location.toString().match('localhost|file') ? 'http://localhost:27080/decisions/issues' : '/mongo/decisions/issues';
+	var getRandom = function getRandom() {
+	  var limit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 50;
+
+	  return Math.ceil(Math.random() * 1000 % limit);
+	};
+	var NO_DB = false;
+	var getIssueStats = function getIssueStats(issueId, cb) {
+	  if (NO_DB) {
+	    cb({
+	      follow: 330,
+	      upvote: 204,
+	      downvote: 35,
+	      share: 147,
+	      'demand-more-info': 40
+	    });
+	    return;
+	  }
+
+	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (result) {
+	    var issue = _lodash2.default.get(result, 'results.0', {});
+	    console.log(JSON.stringify(issue));
+	    cb(_lodash2.default.extend({
+	      follow: 0,
+	      upvote: 0,
+	      downvote: 0,
+	      share: 0,
+	      'demand-more-info': 0,
+	      'too-small-budget': 0,
+	      'too-expensive': 0
+	    }, _lodash2.default.omit(issue, '_id')));
+	  }).fail(function (responseText) {
+	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(responseText));
+	  });
+	};
+
+	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, newCount, cb) {
+	  if (!NO_DB) {
+	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"$set" : {"' + statsKey + '": ' + newCount + '}}') + "&amp;" + "upsert=true").done(function (response) {
+	      cb(response);
+	    }).fail(function (error) {
+	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
+	    });
+	  }
+	};
+
+	var Issue = function (_React$Component) {
+	  _inherits(Issue, _React$Component);
+
+	  function Issue() {
+	    _classCallCheck(this, Issue);
+
+	    var _this = _possibleConstructorReturn(this, (Issue.__proto__ || Object.getPrototypeOf(Issue)).call(this));
+
+	    _this.onReaction = _this.onReaction.bind(_this);
+	    _this.loadIssue = _this.loadIssue.bind(_this);
+
+	    _this.state = {
+	      follow: 330,
+	      upvote: 204,
+	      downvote: 35,
+	      share: 147,
+	      'demand-more-info': 40,
+	      'too-small-budget': 23,
+	      'too-expensive': 123,
+	      didAction: false,
+	      issue: null,
+	      loaded: false
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Issue, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.loadIssue(this.props.params.issueId);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      this.setState({
+	        prevState: null
+	      });
+	      this.loadIssue(newProps.params.issueId);
+	    }
+	  }, {
+	    key: 'loadIssue',
+	    value: function loadIssue(issueId) {
+	      var _this2 = this;
+
+	      this.setState({
+	        loaded: false
+	      });
+	      getIssueStats(issueId, function (issue) {
+	        _this2.setState(_lodash2.default.extend({
+	          loaded: true
+	        }, issue));
+	      });
+	      _jquery2.default.ajax({
+	        url: 'https://dev.hel.fi/openahjo/v1/issue/' + issueId + '/?format=jsonp',
+	        dataType: 'JSONP',
+	        jsonpCallback: 'callback',
+	        type: 'GET'
+	      }).done(function (data) {
+	        translateToLocalLanguage(data.summary || '', function (summary) {
+	          translateToLocalLanguage(data.subject || '', function (subject) {
+	            _this2.setState({
+	              issue: _lodash2.default.extend({}, data, {
+	                summary: summary,
+	                subject: subject
+	              })
+	            });
+	          });
+	        });
+	      }).fail(function (error) {
+	        alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
+	      });
+	    }
+	  }, {
+	    key: 'onReaction',
+	    value: function onReaction(event) {
+	      var _setState,
+	          _this3 = this;
+
+	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
+	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
+	      if (_lodash2.default.isNumber(prevReactionCount) && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
+	        console.log('Already upvoted. skipping..');
+	        return;
+	      }
+	      var newCount = this.state[reactionId] + 1;
+	      this.setState((_setState = {
+	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId] || 0))
+	      }, _defineProperty(_setState, reactionId, newCount), _defineProperty(_setState, 'didAction', true), _setState));
+	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount, function (response) {
+	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var issue = this.state.issue || {};
+	      var issueElem = 'Loading...';
+	      var issuesPool = [25435, 24524, 32319, 32320, 31660];
+	      console.log(getRandom(issuesPool.length));
+	      if (this.state.loaded) {
+	        issueElem = _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Two Minutes For My City'
+	          ),
+	          _react2.default.createElement(
+	            'issue',
+	            null,
+	            _react2.default.createElement(
+	              'article',
+	              null,
+	              _react2.default.createElement(
+	                'h2',
+	                { className: 'mt-1' },
+	                'What do you think about:'
+	              ),
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                issue.subject,
+	                ' ?'
+	              ),
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                _lodash2.default.get(issue, 'summary') && issue.summary.substr(0, 150) + '...',
+	                _react2.default.createElement(
+	                  'a',
+	                  { href: 'https://dev.hel.fi/paatokset/asia/' + (issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()), target: '_blank' },
+	                  ' Read more '
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                ' ',
+	                _react2.default.createElement(
+	                  'b',
+	                  null,
+	                  'Make them hear your voice: '
+	                ),
+	                ' '
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
+	                'Follow ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.follow
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
+	                'Upvote ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.upvote
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
+	                'Downvote ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.downvote
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'btn btn-outline-primary',
+	                  'data-reaction': 'share',
+	                  onClick: this.onReaction,
+	                  href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
+	                  target: '_blank' },
+	                'Share ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.share
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'form',
+	              { className: 'form-inline' },
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'demand-more-info', onClick: this.onReaction },
+	                'Demand More Information ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state['demand-more-info']
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-expensive', onClick: this.onReaction },
+	                'Too expensive! ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state['too-expensive']
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-small-budget', onClick: this.onReaction },
+	                'Too small budget! ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state['too-small-budget']
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
+	                href: 'https://www.kansalaisaloite.fi/fi/aloite',
+	                target: '_blank' },
+	              'Make a Petition'
+	            ),
+	            _react2.default.createElement(
+	              'a',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
+	                href: 'https://www.facebook.com/search/events/?q=' + escape(issue.subject),
+	                target: '_blank' },
+	              'Make meeting on FB'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { className: 'float-xs-right', to: '/issue/' + issuesPool[getRandom(issuesPool.length) - 1] },
+	                ' ',
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-outline-default mb-1' },
+	                  'Next Issue  >> '
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: 'https://www.facebook.com/TwoMinutesForMyCity/', target: '_blank' },
+	                ' Join our FB page '
+	              )
+	            )
+	          )
+	        );
+	      }
+	      // 31660, 32319, 32323, 32320, 32324
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'container' },
+	        issueElem
+	      );
+	    }
+	  }]);
+
+	  return Issue;
+	}(_react2.default.Component);
+
+	exports.default = Issue;
+
+/***/ },
 /* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -26399,417 +26780,55 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _jquery = __webpack_require__(261);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _reactRouter = __webpack_require__(180);
-
-	var _lodash = __webpack_require__(262);
-
-	var _lodash2 = _interopRequireDefault(_lodash);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ISSUES_COLLECTION_URL = window.location.toString().match('localhost|file') ? 'http://localhost:27080/decisions/issues' : '/mongo/decisions/issues';
-	var getRandom = function getRandom() {
-	  var limit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 50;
-
-	  return Math.ceil(Math.random() * 1000 % limit);
-	};
-	var NO_DB = false;
-	var getIssueStats = function getIssueStats(issueId, cb) {
-	  if (NO_DB) {
-	    cb({
-	      follow: 330,
-	      upvote: 204,
-	      downvote: 35,
-	      share: 147,
-	      'demand-more-info': 40
-	    });
-	    return;
-	  }
-
-	  _jquery2.default.get(ISSUES_COLLECTION_URL + '/_find?criteria=' + escape('{"_id": ' + issueId + '}')).done(function (result) {
-	    var issue = _lodash2.default.get(result, 'results.0', {});
-	    console.log(JSON.stringify(issue));
-	    cb(_lodash2.default.extend({
-	      follow: 0,
-	      upvote: 0,
-	      downvote: 0,
-	      share: 0,
-	      'demand-more-info': 0,
-	      'too-small-budget': 0,
-	      'too-expensive': 0
-	    }, _lodash2.default.omit(issue, '_id')));
-	  }).fail(function (responseText) {
-	    alert('Error occured, plz try again. Error msg: ' + JSON.stringify(responseText));
-	  });
-	};
-
-	var increaseIssueStat = function increaseIssueStat(issueId, issue, statsKey, newCount, cb) {
-	  if (!NO_DB) {
-	    _jquery2.default.post(ISSUES_COLLECTION_URL + '/_update', "criteria=" + escape('{"_id": ' + issueId + ' }') + "&amp;" + "newobj=" + escape('{"$set" : {"' + statsKey + '": ' + newCount + '}}') + "&amp;" + "upsert=true").done(function (response) {
-	      cb(response);
-	    }).fail(function (error) {
-	      alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
-	    });
-	  }
-	};
-
-	var Issue = function (_React$Component) {
-	  _inherits(Issue, _React$Component);
-
-	  function Issue() {
-	    _classCallCheck(this, Issue);
-
-	    var _this = _possibleConstructorReturn(this, (Issue.__proto__ || Object.getPrototypeOf(Issue)).call(this));
-
-	    _this.onReaction = _this.onReaction.bind(_this);
-	    _this.loadIssue = _this.loadIssue.bind(_this);
-
-	    _this.state = {
-	      follow: 330,
-	      upvote: 204,
-	      downvote: 35,
-	      share: 147,
-	      'demand-more-info': 40,
-	      'too-small-budget': 23,
-	      'too-expensive': 123,
-	      didAction: false,
-	      issue: null,
-	      loaded: false
-	    };
-	    return _this;
-	  }
-
-	  _createClass(Issue, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.loadIssue(this.props.params.issueId);
-	    }
-	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(newProps) {
-	      this.setState({
-	        prevState: null
-	      });
-	      this.loadIssue(newProps.params.issueId);
-	    }
-	  }, {
-	    key: 'loadIssue',
-	    value: function loadIssue(issueId) {
-	      var _this2 = this;
-
-	      this.setState({
-	        loaded: false
-	      });
-	      getIssueStats(issueId, function (issue) {
-	        _this2.setState(_lodash2.default.extend({
-	          loaded: true
-	        }, issue));
-	      });
-	      _jquery2.default.ajax({
-	        url: 'https://dev.hel.fi/openahjo/v1/issue/' + issueId + '/?format=jsonp',
-	        dataType: 'JSONP',
-	        jsonpCallback: 'callback',
-	        type: 'GET'
-	      }).done(function (data) {
-	        _this2.setState({
-	          issue: data
-	        });
-	      }).fail(function (error) {
-	        alert('Error occured, plz try again. Error msg: ' + JSON.stringify(error));
-	      });
-	    }
-	  }, {
-	    key: 'onReaction',
-	    value: function onReaction(event) {
-	      var _setState,
-	          _this3 = this;
-
-	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
-	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
-	      if (_lodash2.default.isNumber(prevReactionCount) && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
-	        console.log('Already upvoted. skipping..');
-	        return;
-	      }
-	      var newCount = this.state[reactionId] + 1;
-	      this.setState((_setState = {
-	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId] || 0))
-	      }, _defineProperty(_setState, reactionId, newCount), _defineProperty(_setState, 'didAction', true), _setState));
-	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount, function (response) {
-	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var issue = this.state.issue || {};
-	      var issueElem = 'Loading...';
-	      var issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
-	      console.log(getRandom(issuesPool.length));
-	      if (this.state.loaded) {
-	        issueElem = _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'h1',
-	            null,
-	            'Two Minutes For My City'
-	          ),
-	          _react2.default.createElement(
-	            'issue',
-	            null,
-	            _react2.default.createElement(
-	              'article',
-	              null,
-	              _react2.default.createElement(
-	                'h2',
-	                { className: 'mt-1' },
-	                'What do you think about:'
-	              ),
-	              _react2.default.createElement(
-	                'h3',
-	                null,
-	                issue.subject,
-	                ' ?'
-	              ),
-	              _react2.default.createElement(
-	                'p',
-	                null,
-	                issue.summary,
-	                _react2.default.createElement(
-	                  'a',
-	                  { href: 'https://dev.hel.fi/paatokset/asia/' + (issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()), target: '_blank' },
-	                  ' Read more '
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'p',
-	                null,
-	                ' ',
-	                _react2.default.createElement(
-	                  'b',
-	                  null,
-	                  'Make them hear your voice: '
-	                ),
-	                ' '
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
-	                'Follow ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state.follow
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
-	                'Upvote ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state.upvote
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
-	                'Downvote ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state.downvote
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'a',
-	                { className: 'btn btn-outline-primary',
-	                  'data-reaction': 'share',
-	                  onClick: this.onReaction,
-	                  href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
-	                  target: '_blank' },
-	                'Share ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state.share
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'form',
-	              { className: 'form-inline' },
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'demand-more-info', onClick: this.onReaction },
-	                'Demand More Information ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state['demand-more-info']
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-expensive', onClick: this.onReaction },
-	                'Too expensive! ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state['too-expensive']
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'too-small-budget', onClick: this.onReaction },
-	                'Too small budget! ',
-	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'tag tag-pill tag-primary' },
-	                  this.state['too-small-budget']
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
-	                href: 'https://www.kansalaisaloite.fi/fi/aloite',
-	                target: '_blank' },
-	              'Make a Petition'
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : ''),
-	                href: 'https://www.facebook.com/search/events/?q=' + escape(issue.subject),
-	                target: '_blank' },
-	              'Make meeting on FB'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                _reactRouter.Link,
-	                { className: 'float-xs-right', to: '/issue/' + issuesPool[getRandom(issuesPool.length) - 1] },
-	                ' ',
-	                _react2.default.createElement(
-	                  'button',
-	                  { className: 'btn btn-outline-default mb-1' },
-	                  'Next Issue  >> '
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: 'https://www.facebook.com/TwoMinutesForMyCity/', target: '_blank' },
-	                ' Join our FB page '
-	              )
-	            )
-	          )
-	        );
-	      }
-	      // 31660, 32319, 32323, 32320, 32324
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'container' },
-	        issueElem
-	      );
-	    }
-	  }]);
-
-	  return Issue;
-	}(_react2.default.Component);
-
-	exports.default = Issue;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	exports.__esModule = true;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
-	var _createLocation2 = __webpack_require__(239);
+	var _createLocation2 = __webpack_require__(238);
 
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 
-	var _createBrowserHistory = __webpack_require__(242);
+	var _createBrowserHistory = __webpack_require__(241);
 
 	var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 
 	exports.createHistory = _createBrowserHistory2['default'];
 
-	var _createHashHistory2 = __webpack_require__(253);
+	var _createHashHistory2 = __webpack_require__(252);
 
 	var _createHashHistory3 = _interopRequireDefault(_createHashHistory2);
 
 	exports.createHashHistory = _createHashHistory3['default'];
 
-	var _createMemoryHistory2 = __webpack_require__(254);
+	var _createMemoryHistory2 = __webpack_require__(253);
 
 	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
 
 	exports.createMemoryHistory = _createMemoryHistory3['default'];
 
-	var _useBasename2 = __webpack_require__(255);
+	var _useBasename2 = __webpack_require__(254);
 
 	var _useBasename3 = _interopRequireDefault(_useBasename2);
 
 	exports.useBasename = _useBasename3['default'];
 
-	var _useBeforeUnload2 = __webpack_require__(256);
+	var _useBeforeUnload2 = __webpack_require__(255);
 
 	var _useBeforeUnload3 = _interopRequireDefault(_useBeforeUnload2);
 
 	exports.useBeforeUnload = _useBeforeUnload3['default'];
 
-	var _useQueries2 = __webpack_require__(257);
+	var _useQueries2 = __webpack_require__(256);
 
 	var _useQueries3 = _interopRequireDefault(_useQueries2);
 
 	exports.useQueries = _useQueries3['default'];
 
-	var _Actions2 = __webpack_require__(240);
+	var _Actions2 = __webpack_require__(239);
 
 	var _Actions3 = _interopRequireDefault(_Actions2);
 
@@ -26817,13 +26836,13 @@
 
 	// deprecated
 
-	var _enableBeforeUnload2 = __webpack_require__(259);
+	var _enableBeforeUnload2 = __webpack_require__(258);
 
 	var _enableBeforeUnload3 = _interopRequireDefault(_enableBeforeUnload2);
 
 	exports.enableBeforeUnload = _enableBeforeUnload3['default'];
 
-	var _enableQueries2 = __webpack_require__(260);
+	var _enableQueries2 = __webpack_require__(259);
 
 	var _enableQueries3 = _interopRequireDefault(_enableQueries2);
 
@@ -26832,7 +26851,7 @@
 	exports.createLocation = createLocation;
 
 /***/ },
-/* 237 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26841,7 +26860,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -26857,7 +26876,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26924,7 +26943,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 239 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26935,13 +26954,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _Actions = __webpack_require__(240);
+	var _Actions = __webpack_require__(239);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
 	function createLocation() {
 	  var location = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
@@ -26981,7 +27000,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -27017,7 +27036,7 @@
 	};
 
 /***/ },
-/* 241 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27028,7 +27047,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -27070,7 +27089,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 242 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27085,17 +27104,17 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _Actions = __webpack_require__(240);
+	var _Actions = __webpack_require__(239);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _ExecutionEnvironment = __webpack_require__(243);
+	var _ExecutionEnvironment = __webpack_require__(242);
 
-	var _DOMUtils = __webpack_require__(244);
+	var _DOMUtils = __webpack_require__(243);
 
-	var _DOMStateStorage = __webpack_require__(245);
+	var _DOMStateStorage = __webpack_require__(244);
 
-	var _createDOMHistory = __webpack_require__(246);
+	var _createDOMHistory = __webpack_require__(245);
 
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 
@@ -27256,7 +27275,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27266,7 +27285,7 @@
 	exports.canUseDOM = canUseDOM;
 
 /***/ },
-/* 244 */
+/* 243 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -27346,7 +27365,7 @@
 	}
 
 /***/ },
-/* 245 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/*eslint-disable no-empty */
@@ -27358,7 +27377,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -27425,7 +27444,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27440,11 +27459,11 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _ExecutionEnvironment = __webpack_require__(243);
+	var _ExecutionEnvironment = __webpack_require__(242);
 
-	var _DOMUtils = __webpack_require__(244);
+	var _DOMUtils = __webpack_require__(243);
 
-	var _createHistory = __webpack_require__(247);
+	var _createHistory = __webpack_require__(246);
 
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 
@@ -27471,7 +27490,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27482,29 +27501,29 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _deepEqual = __webpack_require__(248);
+	var _deepEqual = __webpack_require__(247);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _AsyncUtils = __webpack_require__(251);
+	var _AsyncUtils = __webpack_require__(250);
 
-	var _Actions = __webpack_require__(240);
+	var _Actions = __webpack_require__(239);
 
-	var _createLocation2 = __webpack_require__(239);
+	var _createLocation2 = __webpack_require__(238);
 
 	var _createLocation3 = _interopRequireDefault(_createLocation2);
 
-	var _runTransitionHook = __webpack_require__(252);
+	var _runTransitionHook = __webpack_require__(251);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -27765,12 +27784,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(249);
-	var isArguments = __webpack_require__(250);
+	var objectKeys = __webpack_require__(248);
+	var isArguments = __webpack_require__(249);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -27865,7 +27884,7 @@
 
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -27880,7 +27899,7 @@
 
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -27906,7 +27925,7 @@
 
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -27969,7 +27988,7 @@
 	}
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -27978,7 +27997,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -27999,7 +28018,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28010,7 +28029,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -28018,17 +28037,17 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _Actions = __webpack_require__(240);
+	var _Actions = __webpack_require__(239);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _ExecutionEnvironment = __webpack_require__(243);
+	var _ExecutionEnvironment = __webpack_require__(242);
 
-	var _DOMUtils = __webpack_require__(244);
+	var _DOMUtils = __webpack_require__(243);
 
-	var _DOMStateStorage = __webpack_require__(245);
+	var _DOMStateStorage = __webpack_require__(244);
 
-	var _createDOMHistory = __webpack_require__(246);
+	var _createDOMHistory = __webpack_require__(245);
 
 	var _createDOMHistory2 = _interopRequireDefault(_createDOMHistory);
 
@@ -28251,7 +28270,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 254 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28262,7 +28281,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -28270,11 +28289,11 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _Actions = __webpack_require__(240);
+	var _Actions = __webpack_require__(239);
 
-	var _createHistory = __webpack_require__(247);
+	var _createHistory = __webpack_require__(246);
 
 	var _createHistory2 = _interopRequireDefault(_createHistory);
 
@@ -28411,7 +28430,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 255 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28422,19 +28441,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _ExecutionEnvironment = __webpack_require__(243);
+	var _ExecutionEnvironment = __webpack_require__(242);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _runTransitionHook = __webpack_require__(252);
+	var _runTransitionHook = __webpack_require__(251);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -28575,7 +28594,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 256 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28586,15 +28605,15 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _ExecutionEnvironment = __webpack_require__(243);
+	var _ExecutionEnvironment = __webpack_require__(242);
 
-	var _DOMUtils = __webpack_require__(244);
+	var _DOMUtils = __webpack_require__(243);
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -28692,7 +28711,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 257 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -28703,19 +28722,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _warning = __webpack_require__(238);
+	var _warning = __webpack_require__(237);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _queryString = __webpack_require__(258);
+	var _queryString = __webpack_require__(257);
 
-	var _runTransitionHook = __webpack_require__(252);
+	var _runTransitionHook = __webpack_require__(251);
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _PathUtils = __webpack_require__(241);
+	var _PathUtils = __webpack_require__(240);
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
@@ -28874,7 +28893,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28946,6 +28965,27 @@
 
 
 /***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _deprecate = __webpack_require__(236);
+
+	var _deprecate2 = _interopRequireDefault(_deprecate);
+
+	var _useBeforeUnload = __webpack_require__(255);
+
+	var _useBeforeUnload2 = _interopRequireDefault(_useBeforeUnload);
+
+	exports['default'] = _deprecate2['default'](_useBeforeUnload2['default'], 'enableBeforeUnload is deprecated, use useBeforeUnload instead');
+	module.exports = exports['default'];
+
+/***/ },
 /* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -28955,32 +28995,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _deprecate = __webpack_require__(237);
+	var _deprecate = __webpack_require__(236);
 
 	var _deprecate2 = _interopRequireDefault(_deprecate);
 
-	var _useBeforeUnload = __webpack_require__(256);
-
-	var _useBeforeUnload2 = _interopRequireDefault(_useBeforeUnload);
-
-	exports['default'] = _deprecate2['default'](_useBeforeUnload2['default'], 'enableBeforeUnload is deprecated, use useBeforeUnload instead');
-	module.exports = exports['default'];
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	var _deprecate = __webpack_require__(237);
-
-	var _deprecate2 = _interopRequireDefault(_deprecate);
-
-	var _useQueries = __webpack_require__(257);
+	var _useQueries = __webpack_require__(256);
 
 	var _useQueries2 = _interopRequireDefault(_useQueries);
 
@@ -28988,7 +29007,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -39214,7 +39233,7 @@
 
 
 /***/ },
-/* 262 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -56283,10 +56302,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(263)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(262)(module)))
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {

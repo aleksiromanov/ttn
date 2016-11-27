@@ -4,6 +4,20 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 
 
+const translateToLocalLanguage = (text, cb) => {
+  if(navigator.language.toLowerCase().match('fi') || navigator.language.toLowerCase().match('se')) {
+    cb(text);
+    return;
+  }
+  $.get(`https://www.googleapis.com/language/translate/v2?q=${escape(text)}&target=en&format=text&source=fi&key=AIzaSyB9ucX9ZnYJpUIm9tZWxP_pzvLZGO7OD4o`).
+  done((result) => {
+    cb(_.get(result, 'data.translations[0].translatedText')+' (translated)' || text)
+  }).fail((err) => {
+    console.error(err);
+    cb(text);
+  })
+};
+
 const ISSUES_COLLECTION_URL = window.location.toString().match('localhost|file')?'http://localhost:27080/decisions/issues':'/mongo/decisions/issues';
 const getRandom = (limit=50) => {
   return Math.ceil((Math.random()*1000) % limit);
@@ -97,9 +111,18 @@ export default class Issue extends React.Component {
       jsonpCallback: 'callback',
       type: 'GET'
     }).done((data) => {
-      this.setState({
-        issue: data
+      translateToLocalLanguage(data.summary || '', (summary) => {
+        translateToLocalLanguage(data.subject || '', (subject) => {
+         this.setState({
+          issue: _.extend({}, data, {
+            summary: summary,
+            subject: subject
+          })
+        })
+        })
+
       })
+
     }).fail( (error) => {
       alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
     })
@@ -127,7 +150,7 @@ export default class Issue extends React.Component {
   render() {
     let issue = this.state.issue || {};
     let issueElem = 'Loading...';
-    let issuesPool = [31660, 32319, 32323, 32320, 32324, 32325, 32326];
+    let issuesPool = [25435,24524, 32319, 32320, 31660];
     console.log(getRandom(issuesPool.length))
     if(this.state.loaded) {
       issueElem =
@@ -146,7 +169,7 @@ export default class Issue extends React.Component {
                {issue.subject} ?
               </h3>
               <p>
-                {issue.summary}
+                {_.get(issue,'summary') && issue.summary.substr(0, 150)+ '...'}
                 <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
               </p>
             </article>
