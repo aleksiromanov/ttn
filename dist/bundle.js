@@ -26564,121 +26564,130 @@
 	      var issueElem = 'Loading...';
 	      if (this.state.loaded) {
 	        issueElem = _react2.default.createElement(
-	          'issue',
+	          'div',
 	          null,
 	          _react2.default.createElement(
-	            'article',
+	            'h1',
+	            null,
+	            'Two Minutes For My City'
+	          ),
+	          _react2.default.createElement(
+	            'issue',
 	            null,
 	            _react2.default.createElement(
-	              'h2',
-	              { className: 'mt-1' },
-	              issue.subject
-	            ),
-	            _react2.default.createElement(
-	              'p',
+	              'article',
 	              null,
-	              issue.summary,
 	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                ' Read more '
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
-	              'Follow ',
+	                'h2',
+	                { className: 'mt-1' },
+	                issue.subject
+	              ),
 	              _react2.default.createElement(
-	                'span',
-	                { className: 'tag tag-pill tag-primary' },
-	                this.state.follow
+	                'p',
+	                null,
+	                issue.summary,
+	                _react2.default.createElement(
+	                  'a',
+	                  { href: 'https://dev.hel.fi/paatokset/asia/' + issue.register_id.replace(' ', '-').toLowerCase(), target: '_blank' },
+	                  ' Read more '
+	                )
 	              )
 	            ),
 	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
-	              'Upvote ',
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'tag tag-pill tag-primary' },
-	                this.state.upvote
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
-	              'Downvote ',
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'tag tag-pill tag-primary' },
-	                this.state.downvote
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'a',
-	              { className: 'btn btn-outline-primary',
-	                'data-reaction': 'share',
-	                onClick: this.onReaction,
-	                href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
-	                target: '_blank' },
-	              'Share ',
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'tag tag-pill tag-primary' },
-	                this.state.share
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'form',
-	            { className: 'form-inline' },
-	            _react2.default.createElement(
-	              'button',
-	              { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'demand-new-head', onClick: this.onReaction },
-	              'Demand New Head ',
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'tag tag-pill tag-primary' },
-	                this.state['demand-new-head']
-	              )
-	            ),
-	            _react2.default.createElement('input', { type: 'text', className: 'form-control reaction-input', placeholder: 'Add new reaction' })
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
-	            'Petitiong'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
-	            'Make meeting on FB'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { className: 'float-xs-right', to: '/issue/' + Math.ceil(Math.random() * 100) },
-	              ' ',
+	              'div',
+	              null,
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'btn btn-outline-default mb-1' },
-	                'Next Issue  >> '
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'follow', onClick: this.onReaction },
+	                'Follow ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.follow
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'upvote', onClick: this.onReaction },
+	                'Upvote ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.upvote
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'downvote', onClick: this.onReaction },
+	                'Downvote ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.downvote
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'btn btn-outline-primary',
+	                  'data-reaction': 'share',
+	                  onClick: this.onReaction,
+	                  href: 'http://www.facebook.com/sharer.php?u=' + escape(window.location),
+	                  target: '_blank' },
+	                'Share ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state.share
+	                )
 	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
+	            ),
 	            _react2.default.createElement(
-	              'a',
-	              { href: 'https://www.facebook.com/TwoMinutesForMyCity/', target: '_blank' },
-	              ' Join our FB page '
+	              'form',
+	              { className: 'form-inline' },
+	              _react2.default.createElement(
+	                'button',
+	                { className: 'btn btn-outline-primary', type: 'button', 'data-reaction': 'demand-new-head', onClick: this.onReaction },
+	                'Demand New Head ',
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'tag tag-pill tag-primary' },
+	                  this.state['demand-new-head']
+	                )
+	              ),
+	              _react2.default.createElement('input', { type: 'text', className: 'form-control reaction-input', placeholder: 'Add new reaction' })
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
+	              'Petitiong'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'btn btn-primary involve-btn mt-2 ' + (!this.state.didAction ? 'invisible' : '') },
+	              'Make meeting on FB'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { className: 'float-xs-right', to: '/issue/' + Math.ceil(Math.random() * 100) },
+	                ' ',
+	                _react2.default.createElement(
+	                  'button',
+	                  { className: 'btn btn-outline-default mb-1' },
+	                  'Next Issue  >> '
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'a',
+	                { href: 'https://www.facebook.com/TwoMinutesForMyCity/', target: '_blank' },
+	                ' Join our FB page '
+	              )
 	            )
 	          )
 	        );

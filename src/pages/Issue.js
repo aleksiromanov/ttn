@@ -128,58 +128,64 @@ export default class Issue extends React.Component {
     let issueElem = 'Loading...';
     if(this.state.loaded) {
       issueElem =
-      <issue>
-          <article>
-            <h2 className="mt-1">
-              {issue.subject}
-            </h2>
-            <p>
-              {issue.summary}
-              <a href='#'> Read more </a>
-            </p>
-          </article>
+      <div>
+          <h1>
+            Two Minutes For My City
+          </h1>
+        <issue>
 
-          <div>
-            <button className="btn btn-outline-primary" type="button" data-reaction='follow' onClick={this.onReaction}>
-              Follow <span className="tag tag-pill tag-primary">{this.state.follow}</span>
+            <article>
+              <h2 className="mt-1">
+                {issue.subject}
+              </h2>
+              <p>
+                {issue.summary}
+                <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
+              </p>
+            </article>
+
+            <div>
+              <button className="btn btn-outline-primary" type="button" data-reaction='follow' onClick={this.onReaction}>
+                Follow <span className="tag tag-pill tag-primary">{this.state.follow}</span>
+              </button>
+              <button className="btn btn-outline-primary" type="button" data-reaction='upvote' onClick={this.onReaction}>
+                Upvote <span className="tag tag-pill tag-primary">{this.state.upvote}</span>
+              </button>
+              <button className="btn btn-outline-primary" type="button" data-reaction='downvote' onClick={this.onReaction}>
+                Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
+              </button>
+              <a className="btn btn-outline-primary"
+                data-reaction='share'
+                onClick={this.onReaction}
+                href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
+                target="_blank">
+                Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
+              </a>
+            </div>
+
+            <form className="form-inline">
+              <button className="btn btn-outline-primary" type="button" data-reaction='demand-new-head' onClick={this.onReaction}>
+                Demand New Head <span className="tag tag-pill tag-primary">{this.state['demand-new-head']}</span>
+              </button>
+              <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
+            </form>
+
+            <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
+              Petitiong
             </button>
-            <button className="btn btn-outline-primary" type="button" data-reaction='upvote' onClick={this.onReaction}>
-              Upvote <span className="tag tag-pill tag-primary">{this.state.upvote}</span>
+            <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
+              Make meeting on FB
             </button>
-            <button className="btn btn-outline-primary" type="button" data-reaction='downvote' onClick={this.onReaction}>
-              Downvote <span className="tag tag-pill tag-primary">{this.state.downvote}</span>
-            </button>
-            <a className="btn btn-outline-primary"
-              data-reaction='share'
-              onClick={this.onReaction}
-              href= {'http://www.facebook.com/sharer.php?u=' + escape(window.location)}
-              target="_blank">
-              Share <span className="tag tag-pill tag-primary">{this.state.share}</span>
-            </a>
-          </div>
 
-          <form className="form-inline">
-            <button className="btn btn-outline-primary" type="button" data-reaction='demand-new-head' onClick={this.onReaction}>
-              Demand New Head <span className="tag tag-pill tag-primary">{this.state['demand-new-head']}</span>
-            </button>
-            <input type='text' className='form-control reaction-input' placeholder='Add new reaction'/>
-          </form>
+            <div>
+              <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
+            </div>
 
-          <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
-            Petitiong
-          </button>
-          <button className={`btn btn-primary involve-btn mt-2 ${!this.state.didAction?'invisible':''}`}>
-            Make meeting on FB
-          </button>
-
-          <div>
-            <Link className='float-xs-right' to={`/issue/${Math.ceil(Math.random()*100)}`}> <button className='btn btn-outline-default mb-1'>Next Issue  >> </button></Link>
-          </div>
-
-          <div>
-            <a href="https://www.facebook.com/TwoMinutesForMyCity/" target="_blank"> Join our FB page </a>
-          </div>
-      </issue>
+            <div>
+              <a href="https://www.facebook.com/TwoMinutesForMyCity/" target="_blank"> Join our FB page </a>
+            </div>
+        </issue>
+      </div>
     }
     return (
       <div className='container'>
