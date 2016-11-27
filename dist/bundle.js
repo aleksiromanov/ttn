@@ -26596,7 +26596,7 @@
 	              _react2.default.createElement(
 	                'p',
 	                null,
-	                issue.summary,
+	                _lodash2.default.get(issue, 'summary') && issue.summary.substr(0, 150) + '...',
 	                _react2.default.createElement(
 	                  'a',
 	                  { href: 'https://dev.hel.fi/paatokset/asia/' + (issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()), target: '_blank' },

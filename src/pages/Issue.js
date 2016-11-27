@@ -146,7 +146,7 @@ export default class Issue extends React.Component {
                {issue.subject} ?
               </h3>
               <p>
-                {issue.summary}
+                {_.get(issue,'summary') && issue.summary.substr(0, 150)+ '...'}
                 <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
               </p>
             </article>
