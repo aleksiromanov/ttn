@@ -135,18 +135,24 @@ export default class Issue extends React.Component {
           <h1>
             Two Minutes For My City
           </h1>
+
         <issue>
 
             <article>
               <h2 className="mt-1">
-                {issue.subject}
+                What do you think about:
               </h2>
+              <h3>
+               {issue.subject} ?
+              </h3>
               <p>
                 {issue.summary}
                 <a href={`https://dev.hel.fi/paatokset/asia/${issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()}`} target='_blank'> Read more </a>
               </p>
             </article>
-
+            <div>
+              <p> <b>Make them hear your voice: </b> </p>
+            </div>
             <div>
               <button className="btn btn-outline-primary" type="button" data-reaction='follow' onClick={this.onReaction}>
                 Follow <span className="tag tag-pill tag-primary">{this.state.follow}</span>

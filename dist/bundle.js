@@ -26585,7 +26585,13 @@
 	              _react2.default.createElement(
 	                'h2',
 	                { className: 'mt-1' },
-	                issue.subject
+	                'What do you think about:'
+	              ),
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                issue.subject,
+	                ' ?'
 	              ),
 	              _react2.default.createElement(
 	                'p',
@@ -26596,6 +26602,21 @@
 	                  { href: 'https://dev.hel.fi/paatokset/asia/' + (issue.register_id && issue.register_id.replace(' ', '-').toLowerCase()), target: '_blank' },
 	                  ' Read more '
 	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                ' ',
+	                _react2.default.createElement(
+	                  'b',
+	                  null,
+	                  'Make them hear your voice: '
+	                ),
+	                ' '
 	              )
 	            ),
 	            _react2.default.createElement(
