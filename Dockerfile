@@ -11,6 +11,7 @@ RUN apt-get install -y git
 RUN git clone https://github.com/mongodb-labs/sleepy.mongoose.git /opt/sleepymongoose
 COPY files/docker-start.sh /
 RUN chmod +x /docker-start.sh
+COPY files/lastDataDumb.json /tmp/
 
 #RUN echo "deb http://packages.erlang-solutions.com/debian jessie contrib" > /etc/apt/sources.list.d/erlang-solutions.list
 #RUN wget -qO - http://packages.erlang-solutions.com/debian/erlang_solutions.asc | apt-key add -
