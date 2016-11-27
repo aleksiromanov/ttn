@@ -26548,13 +26548,13 @@
 
 	      var reactionId = (0, _jquery2.default)(event.currentTarget).attr('data-reaction');
 	      var prevReactionCount = _lodash2.default.get(this.state, 'prevState.' + reactionId);
-	      if (prevReactionCount && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
+	      if (_lodash2.default.isNumber(prevReactionCount) && prevReactionCount !== _lodash2.default.get(this.state, '' + reactionId)) {
 	        console.log('Already upvoted. skipping..');
 	        return;
 	      }
 	      var newCount = this.state[reactionId] + 1;
 	      this.setState((_setState = {
-	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId]))
+	        prevState: _lodash2.default.extend({}, this.state.prevState, _defineProperty({}, reactionId, this.state[reactionId] || 0))
 	      }, _defineProperty(_setState, reactionId, newCount), _defineProperty(_setState, 'didAction', true), _setState));
 	      increaseIssueStat(this.props.params.issueId, this.state.issue, reactionId, newCount, function (response) {
 	        console.log('on inserting ' + _this3.props.params.issueId + ', server responded ' + JSON.stringify(response));

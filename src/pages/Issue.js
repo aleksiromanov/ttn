@@ -108,13 +108,13 @@ export default class Issue extends React.Component {
   onReaction(event) {
     const reactionId = $(event.currentTarget).attr('data-reaction');
     let prevReactionCount = _.get(this.state,`prevState.${reactionId}`)
-    if( prevReactionCount &&  prevReactionCount !== _.get(this.state,`${reactionId}`)) {
+    if( _.isNumber(prevReactionCount) &&  prevReactionCount !== _.get(this.state,`${reactionId}`)) {
       console.log ('Already upvoted. skipping..')
       return;
     }
-    const newCount = this.state[reactionId] + 1
+    const newCount = this.state[reactionId] + 1;
     this.setState({
-      prevState: _.extend({}, this.state.prevState, {[reactionId]: this.state[reactionId]}),
+      prevState: _.extend({}, this.state.prevState, {[reactionId]: this.state[reactionId] || 0}),
       [reactionId]: newCount,
       didAction: true
     });
