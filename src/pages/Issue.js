@@ -122,18 +122,21 @@ export default class Issue extends React.Component {
       jsonpCallback: 'callback',
       type: 'GET'
     }).done((data) => {
-      translateToLocalLanguage(data.summary || '', (summary) => {
-        translateToLocalLanguage(data.subject || '', (subject) => {
-         this.setState({
-          issue: _.extend({}, data, {
-            summary: summary,
-            subject: subject
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+      else {
+        translateToLocalLanguage(data.summary || '', (summary) => {
+          translateToLocalLanguage(data.subject || '', (subject) => {
+           this.setState({
+            issue: _.extend({}, data, {
+              summary: summary,
+              subject: subject
+            })
+          })
           })
         })
-        })
-
-      })
-
+      }
     }).fail( (error) => {
       alert(`Error occured, plz try again. Error msg: ${JSON.stringify(error)}`);
     })
