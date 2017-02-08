@@ -1,12 +1,16 @@
 
-all: deploy
+IMAGE := ttn
 
-build:
-	ansible-playbook -s -v --extra-vars '{"homedir":"/opt/ws/neaten/ttn"}' before-docker.yml
+all: staging
 
-deploy:
-	docker build -t aleksiromanov/ttn .
-	docker run -d --privileged --name ttn aleksiromanov/ttn
+staging: build-staging deploy-staging
+
+build-staging:
+	NODE_ENV=test webpack --progress --colors
+
+deploy-staging:
+	docker build -t $(IMAGE) .
+	docker run -d --privileged --name ttn $(IMAGE)
 
 clean:
 	docker rm -f ttn
